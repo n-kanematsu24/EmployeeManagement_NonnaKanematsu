@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>部門登録 — 社員情報管理システム</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f3f3f1;--sidebar-w:220px;--topbar-h:52px;
+  --white:#fff;--border:#e2e0dc;
+  --text-dark:#1a1a1a;--text-mid:#555;--text-soft:#999;
+  --accent:#2b5ba5;--danger:#c53030;
+  --hover-bg:rgba(0,0,0,.04);--active-bg:rgba(0,0,0,.07);
+  --radius-sm:6px;--radius-md:10px;--radius-lg:16px;
+  --font:'Noto Sans JP',sans-serif;--mono:'DM Mono',monospace;
+  --tr:150ms ease;
+  --sh-sm:0 1px 4px rgba(0,0,0,.06);--sh-md:0 4px 16px rgba(0,0,0,.09);
+}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text-dark);font-size:14px;line-height:1.5;display:flex;overflow:hidden}
+ 
+/* Sidebar */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;overflow-x:hidden}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo-main{font-size:13px;font-weight:700;color:var(--text-dark);letter-spacing:-.01em}
+.logo-sub{font-size:10px;color:var(--text-soft);margin-top:2px;letter-spacing:.02em}
+.nav-body{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px}
+.nav-section-label{font-size:9px;font-weight:500;color:var(--text-soft);letter-spacing:.12em;text-transform:uppercase;padding:10px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);font-size:13px;color:var(--text-mid);cursor:pointer;transition:background var(--tr),color var(--tr);text-decoration:none;user-select:none}
+.nav-item svg{flex-shrink:0;opacity:.7}.nav-item:hover{background:var(--hover-bg);color:var(--text-dark)}.nav-item:hover svg{opacity:1}
+.nav-item.active{background:var(--active-bg);color:var(--text-dark);font-weight:500}.nav-item.active svg{opacity:1}
+.nav-item.danger{color:var(--danger)}.nav-item.danger svg{color:var(--danger)}.nav-item.danger:hover{background:#fff5f5}
+.nav-divider{height:1px;background:var(--border);margin:6px 0}
+.sidebar-footer{padding:14px 18px;font-size:10px;color:var(--text-soft);line-height:1.6;border-top:1px solid var(--border);flex-shrink:0}
+ 
+/* Main */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{height:var(--topbar-h);background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px}
+.breadcrumb-icon{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.bc-link{color:var(--text-soft);text-decoration:none;transition:color var(--tr)}.bc-link:hover{color:var(--accent)}
+.bc-sep{color:var(--border);font-size:16px}.bc-current{font-weight:600;color:var(--text-dark)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.lang-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:12px;font-weight:500;color:var(--text-dark);cursor:pointer;transition:background var(--tr),border-color var(--tr);user-select:none}
+.lang-btn:hover{background:var(--hover-bg)}.lang-btn.open{border-color:#aaa}.lang-btn svg{opacity:.6}
+.lang-btn .chevron{font-size:9px;opacity:.5;transition:transform 200ms ease;display:inline-block}.lang-btn.open .chevron{transform:rotate(180deg)}
+.device-btn{display:flex;align-items:center;justify-content:center;width:34px;height:30px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-mid)}.device-btn:hover{background:var(--hover-bg)}
+ 
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:28px 32px 48px}
+.content::-webkit-scrollbar{width:6px}.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+ 
+/* Form card */
+.form-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  box-shadow:var(--sh-sm);
+  opacity:0;transform:translateY(10px);
+  animation:fadeUp .35s ease forwards;
+}
+.form-card-header{
+  display:flex;align-items:center;gap:10px;
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;font-weight:600;color:var(--text-dark);
+}
+.form-card-header svg{opacity:.6;flex-shrink:0}
+ 
+.form-body{display:flex;gap:0;min-height:400px}
+ 
+/* 左: フォームエリア */
+.form-main{flex:1;padding:28px 28px 28px 28px;display:flex;flex-direction:column;gap:22px}
+ 
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+ 
+.field-group{display:flex;flex-direction:column;gap:7px}
+.field-label{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;color:var(--text-soft);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.field-label svg{opacity:.5}
+.req{color:var(--danger);font-weight:700;font-size:12px;margin-left:2px}
+ 
+.field-input{
+  padding:9px 13px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-family:var(--font);font-size:14px;color:var(--text-dark);
+  outline:none;transition:border-color var(--tr),box-shadow var(--tr);
+  width:100%;
+}
+.field-input::placeholder{color:var(--text-soft)}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,91,165,.08)}
+.field-input.mono{font-family:var(--mono)}
+.field-input.error{border-color:var(--danger);box-shadow:0 0 0 3px rgba(197,48,48,.08)}
+ 
+/* メンバードロップダウン */
+.members-stack{display:flex;flex-direction:column;gap:8px}
+.member-row{display:flex;align-items:center;gap:8px}
+.member-select{
+  flex:1;max-width:240px;
+  padding:9px 32px 9px 13px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-family:var(--font);font-size:13px;color:var(--text-dark);
+  outline:none;cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  transition:border-color var(--tr);
+}
+.member-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,91,165,.08);outline:none}
+.btn-remove-member{
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--white);color:var(--text-soft);cursor:pointer;
+  font-size:16px;line-height:1;transition:all .15s;flex-shrink:0;
+}
+.btn-remove-member:hover{background:#fff5f5;border-color:#fdd;color:var(--danger)}
+.btn-add-member{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 14px;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--white);color:var(--text-mid);
+  font-family:var(--font);font-size:12px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+}
+.btn-add-member:hover{background:var(--bg);border-color:#bbb;color:var(--text-dark)}
+ 
+/* 右: 画像アップロード */
+.form-aside{
+  width:220px;flex-shrink:0;
+  padding:28px 28px 28px 0;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding-top:48px;
+}
+.upload-circle{
+  width:160px;height:160px;border-radius:50%;
+  background:var(--bg);border:1.5px dashed var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;transition:all .2s;
+  position:relative;overflow:hidden;
+}
+.upload-circle:hover{border-color:#bbb;background:#eeeee9}
+.upload-circle:hover .upload-hint{opacity:1}
+.upload-preview{
+  width:100%;height:100%;object-fit:cover;border-radius:50%;
+  position:absolute;inset:0;display:none;
+}
+.upload-icon{opacity:.35;transition:opacity .2s;color:var(--text-soft)}
+.upload-label{font-size:10px;color:var(--text-soft);text-align:center;line-height:1.5;opacity:.7;transition:opacity .2s}
+.upload-hint{font-size:10px;color:var(--accent);text-align:center;opacity:0;transition:opacity .2s;position:absolute;bottom:24px}
+#fileInput{display:none}
+ 
+/* フッターボタン */
+.form-footer{
+  display:flex;justify-content:flex-end;gap:10px;
+  padding:16px 24px;border-top:1px solid var(--border);
+  background:var(--bg);
+}
+.btn{display:flex;align-items:center;gap:7px;padding:10px 24px;border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;border:1px solid var(--border)}
+.btn-primary{background:var(--text-dark);color:#fff;border-color:var(--text-dark)}.btn-primary:hover{background:#333}
+.btn-secondary{background:var(--white);color:var(--text-dark)}.btn-secondary:hover{background:var(--bg)}
+ 
+/* エラーメッセージ */
+.error-msg{font-size:11px;color:var(--danger);margin-top:3px;display:none}
+.error-msg.show{display:block}
+ 
+/* 言語ドロップダウン */
+.lang-overlay{position:fixed;inset:0;background:rgba(0,0,0,.18);backdrop-filter:blur(1px);z-index:200;opacity:0;pointer-events:none;transition:opacity 200ms}
+.lang-overlay.show{opacity:1;pointer-events:all}
+.lang-dropdown{position:fixed;z-index:201;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 8px 32px rgba(0,0,0,.16);min-width:200px;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-6px) scale(.97);transform-origin:top right;transition:opacity 180ms,transform 180ms}
+.lang-dropdown.show{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+.lang-dropdown-header{padding:10px 14px 8px;font-size:10px;font-weight:600;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.lang-option{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background var(--tr);font-size:13px;color:var(--text-dark)}
+.lang-option:hover{background:var(--hover-bg)}.lang-option.active{background:#eef3fb;color:var(--accent);font-weight:500}
+.lang-flag{font-size:16px;line-height:1;flex-shrink:0}.lang-label-main{font-weight:500}
+.lang-label-sub{font-size:11px;color:var(--text-soft);margin-left:auto;font-family:var(--mono)}
+.lang-check{margin-left:auto;color:var(--accent);font-size:14px;display:none}.lang-option.active .lang-check{display:block}.lang-option.active .lang-label-sub{display:none}
+ 
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text-dark);color:#fff;padding:11px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:opacity 200ms,transform 200ms;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+ 
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+ 
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-main">社員情報管理システム</div>
+    <div class="logo-sub">Employee Management System</div>
+  </div>
+  <nav class="nav-body">
+    <div class="nav-section-label">社員</div>
+    <a class="nav-item" href="employee_list.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      社員一覧
+    </a>
+    <a class="nav-item" href="employee_add.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      社員追加
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">部門</div>
+    <a class="nav-item" href="dept_list.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      部門一覧
+    </a>
+    <a class="nav-item active" href="dept_add.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+      部門追加
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item danger" href="#" onclick="confirmLogout(event)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      ログアウト
+    </a>
+  </nav>
+  <div class="sidebar-footer">@2026<br>Employee Management System</div>
+</aside>
+ 
+<div class="main">
+  <header class="topbar">
+    <div class="breadcrumb">
+      <div class="breadcrumb-icon">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+      </div>
+      <a href="dept_list.html" class="bc-link">部門一覧</a>
+      <span class="bc-sep">›</span>
+      <span class="bc-current">部門登録</span>
+    </div>
+    <div class="topbar-right">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span id="langLabel">JP</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="device-btn">
+        <svg width="14" height="16" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="12" height="18" rx="2"/><line x1="5" y1="17" x2="9" y2="17"/></svg>
+      </div>
+    </div>
+  </header>
+ 
+  <div class="content">
+    <div class="form-card">
+      <div class="form-card-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+        部門情報の入力
+      </div>
+ 
+      <div class="form-body">
+        <!-- 左: フォームフィールド -->
+        <div class="form-main">
+ 
+          <!-- 部門ID / 部門名 -->
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label" for="deptId">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                部門ID<span class="req">*</span>
+              </label>
+              <input type="text" id="deptId" class="field-input mono" placeholder="例）DEPT000" maxlength="20">
+              <div class="error-msg" id="errDeptId">部門IDを入力してください</div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="deptName">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                部門名<span class="req">*</span>
+              </label>
+              <input type="text" id="deptName" class="field-input" placeholder="例）営業部" maxlength="50">
+              <div class="error-msg" id="errDeptName">部門名を入力してください</div>
+            </div>
+          </div>
+ 
+          <!-- メンバー -->
+          <div class="field-group">
+            <label class="field-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              メンバー<span class="req">*</span>
+            </label>
+            <div class="members-stack" id="membersStack">
+              <!-- JS で生成 -->
+            </div>
+            <div style="margin-top:4px">
+              <button class="btn-add-member" type="button" onclick="addMemberRow()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                追加
+              </button>
+            </div>
+            <div class="error-msg" id="errMembers">メンバーを1人以上選択してください</div>
+          </div>
+ 
+          <!-- 電話番号 -->
+          <div class="field-group" style="max-width:320px">
+            <label class="field-label" for="deptPhone">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.64 18.5 19.5 19.5 0 0 1 4.5 11.36 19.79 19.79 0 0 1 1.08 2.18 2 2 0 0 1 3.08 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.96a16 16 0 0 0 6.29 6.29l1.85-1.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              電話番号<span class="req">*</span>
+            </label>
+            <input type="text" id="deptPhone" class="field-input mono" placeholder="例）000-0000-0000">
+            <div class="error-msg" id="errPhone">電話番号を入力してください</div>
+          </div>
+ 
+        </div><!-- /form-main -->
+ 
+        <!-- 右: 画像アップロード -->
+        <div class="form-aside">
+          <div class="upload-circle" onclick="document.getElementById('fileInput').click()">
+            <img id="uploadPreview" class="upload-preview" src="" alt="">
+            <svg class="upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span class="upload-label">クリックして<br>画像を追加</span>
+            <span class="upload-hint">変更する</span>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" onchange="previewImage(this)">
+          <p style="font-size:10px;color:var(--text-soft);margin-top:10px;text-align:center">部門のアイコン画像<br>（省略可）</p>
+        </div>
+      </div><!-- /form-body -->
+ 
+      <div class="form-footer">
+        <button class="btn btn-secondary" onclick="location.href='dept_list.html'">キャンセル</button>
+        <button class="btn btn-primary" onclick="submitForm()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          登録
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<div class="lang-overlay" id="langOverlay" onclick="closeLang()"></div>
+<div class="lang-dropdown" id="langDropdown" role="listbox">
+  <div class="lang-dropdown-header">言語を選択</div>
+</div>
+<div class="toast" id="toast"></div>
+ 
+<script>
+const ALL_EMPLOYEES = [
+  '田中 太郎','松本 大輔','高橋 美咲','加藤 はな','伊藤 楓','渡辺 陸','Mia Martinez','小林 愛','鈴木 浩太郎','山口 カ也','吉田 美優',
+  '山田 花子','佐藤 健一','鈴木 大輔','中村 愛',
+  '伊藤 誠','渡辺 美紀','小林 隆',
+  '高橋 良子','松本 剛','坂本 美咲','田村 浩二',
+  '中村 博','石田 智子','加藤 博文',
+  '木村 葵','林 拓也','清水 奈緒',
+  '森 大介','岡田 幸子'
+];
+ 
+const LANGUAGES=[
+  {code:'ja',flag:'🇯🇵',label:'日本語',sub:'Japanese',short:'JP'},
+  {code:'en',flag:'🇺🇸',label:'English',sub:'English',short:'EN'},
+  {code:'zh-tw',flag:'🇹🇼',label:'繁體字',sub:'Traditional',short:'TW'},
+  {code:'zh-cn',flag:'🇨🇳',label:'简体字',sub:'Simplified',short:'CN'},
+  {code:'ko',flag:'🇰🇷',label:'한국어',sub:'Korean',short:'KR'},
+  {code:'es',flag:'🇪🇸',label:'Español',sub:'Spanish',short:'ES'},
+  {code:'fr',flag:'🇫🇷',label:'Français',sub:'French',short:'FR'},
+  {code:'de',flag:'🇩🇪',label:'Deutsch',sub:'German',short:'DE'},
+  {code:'pt',flag:'🇧🇷',label:'Português',sub:'Portuguese',short:'PT'},
+  {code:'it',flag:'🇮🇹',label:'Italiano',sub:'Italian',short:'IT'},
+  {code:'vi',flag:'🇻🇳',label:'Tiếng Việt',sub:'Vietnamese',short:'VI'},
+  {code:'th',flag:'🇹🇭',label:'ภาษาไทย',sub:'Thai',short:'TH'},
+];
+let currentLang='ja';
+ 
+document.addEventListener('DOMContentLoaded', () => {
+  buildLangMenu();
+  // 初期: 3行
+  addMemberRow(); addMemberRow(); addMemberRow();
+});
+ 
+/* メンバー行 */
+function makeSelectHTML(selectedValue=''){
+  const opts = ALL_EMPLOYEES.map(e =>
+    `<option value="${e}" ${e===selectedValue?'selected':''}>${e}</option>`
+  ).join('');
+  return `<option value="">選択してください</option>${opts}`;
+}
+ 
+function addMemberRow(selectedValue=''){
+  const stack = document.getElementById('membersStack');
+  const row = document.createElement('div');
+  row.className = 'member-row';
+  row.innerHTML = `
+    <select class="member-select">${makeSelectHTML(selectedValue)}</select>
+    <button type="button" class="btn-remove-member" onclick="removeMemberRow(this)" title="削除">×</button>
+  `;
+  stack.appendChild(row);
+  updateRemoveButtons();
+}
+ 
+function removeMemberRow(btn){
+  btn.closest('.member-row').remove();
+  updateRemoveButtons();
+}
+ 
+function updateRemoveButtons(){
+  const rows = document.querySelectorAll('.member-row');
+  rows.forEach(r => {
+    const btn = r.querySelector('.btn-remove-member');
+    btn.style.visibility = rows.length > 1 ? 'visible' : 'hidden';
+  });
+}
+ 
+/* 画像プレビュー */
+function previewImage(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('uploadPreview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.querySelector('.upload-icon').style.display = 'none';
+    document.querySelector('.upload-label').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+ 
+/* バリデーション & 送信 */
+function validate(){
+  let ok = true;
+  const fields = [
+    ['deptId','errDeptId'],
+    ['deptName','errDeptName'],
+    ['deptPhone','errPhone'],
+  ];
+  fields.forEach(([id, errId]) => {
+    const val = document.getElementById(id).value.trim();
+    const err = document.getElementById(errId);
+    const inp = document.getElementById(id);
+    if(!val){ inp.classList.add('error'); err.classList.add('show'); ok=false; }
+    else { inp.classList.remove('error'); err.classList.remove('show'); }
+  });
+  const members = [...document.querySelectorAll('.member-select')].filter(s=>s.value);
+  const errM = document.getElementById('errMembers');
+  if(!members.length){ errM.classList.add('show'); ok=false; }
+  else errM.classList.remove('show');
+  return ok;
+}
+ 
+function submitForm(){
+  if(!validate()) return;
+  const members = [...document.querySelectorAll('.member-select')].filter(s=>s.value).map(s=>s.value);
+  const newDept = {
+    id: document.getElementById('deptId').value.trim(),
+    code: document.getElementById('deptId').value.trim().toUpperCase(),
+    name: document.getElementById('deptName').value.trim(),
+    phone: document.getElementById('deptPhone').value.trim(),
+    email: '',
+    members,
+    created: new Date().toLocaleDateString('ja-JP').replace(/\//g,'/')+' '+new Date().toLocaleTimeString('ja-JP'),
+    updated: new Date().toLocaleDateString('ja-JP').replace(/\//g,'/')+' '+new Date().toLocaleTimeString('ja-JP'),
+  };
+  // localStorageに保存
+  try{
+    const added = JSON.parse(localStorage.getItem('dept_added')||'[]');
+    added.push(newDept);
+    localStorage.setItem('dept_added', JSON.stringify(added));
+  }catch(e){}
+  showToast(`「${newDept.name}」を登録しました`);
+  setTimeout(()=>location.href='dept_list.html', 1200);
+}
+ 
+/* 言語 */
+function buildLangMenu(){
+  const dd=document.getElementById('langDropdown');
+  const hdr=dd.querySelector('.lang-dropdown-header');
+  dd.innerHTML=''; dd.appendChild(hdr);
+  LANGUAGES.forEach(l=>{
+    const opt=document.createElement('div');
+    opt.className='lang-option'+(l.code===currentLang?' active':'');
+    opt.innerHTML=`<span class="lang-flag">${l.flag}</span><span class="lang-label-main">${l.label}</span><span class="lang-label-sub">${l.sub}</span><span class="lang-check">✓</span>`;
+    opt.onclick=()=>selectLang(l); dd.appendChild(opt);
+  });
+}
+function toggleLang(){
+  const btn=document.getElementById('langBtn'),dd=document.getElementById('langDropdown');
+  if(dd.classList.contains('show')){closeLang();return}
+  const r=btn.getBoundingClientRect();
+  dd.style.top=(r.bottom+6)+'px'; dd.style.right=(window.innerWidth-r.right)+'px';
+  document.getElementById('langOverlay').classList.add('show');
+  dd.classList.add('show'); btn.classList.add('open');
+}
+function closeLang(){
+  document.getElementById('langOverlay').classList.remove('show');
+  document.getElementById('langDropdown').classList.remove('show');
+  document.getElementById('langBtn').classList.remove('open');
+}
+function selectLang(l){currentLang=l.code;document.getElementById('langLabel').textContent=l.short;buildLangMenu();closeLang();showToast(`言語を「${l.label}」に変更しました`)}
+function confirmLogout(e){e.preventDefault();if(confirm('ログアウトしますか？'))showToast('ログアウトしました')}
+ 
+let toastTimer;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLang()});
+</script>
+</body>
+</html>
+ 

@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>部門一覧 — 社員情報管理システム</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Variables ─────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+:root {
+  --bg:        #f3f3f1;
+  --sidebar-w: 220px;
+  --topbar-h:  52px;
+  --search-h:  60px;
+  --white:     #ffffff;
+  --border:    #e2e0dc;
+  --text-dark: #1a1a1a;
+  --text-mid:  #555555;
+  --text-soft: #999999;
+  --accent:    #2b5ba5;
+  --danger:    #c53030;
+  --hover-bg:  rgba(0,0,0,.04);
+  --active-bg: rgba(0,0,0,.07);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --shadow:    0 2px 12px rgba(0,0,0,.08);
+  --font:      'Noto Sans JP', sans-serif;
+  --mono:      'DM Mono', monospace;
+  --transition: 150ms ease;
+}
+ 
+html, body { height: 100%; overflow: hidden; }
+ 
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+}
+ 
+/* ─── Sidebar ───────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+ 
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+ 
+.sidebar-logo {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.logo-main {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -.01em;
+}
+.logo-sub {
+  font-size: 10px;
+  color: var(--text-soft);
+  margin-top: 2px;
+  letter-spacing: .02em;
+}
+ 
+.nav-body {
+  flex: 1;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+ 
+.nav-section-label {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-soft);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 10px 8px 4px;
+}
+ 
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  text-decoration: none;
+  user-select: none;
+}
+.nav-item svg { flex-shrink: 0; opacity: .7; }
+.nav-item:hover { background: var(--hover-bg); color: var(--text-dark); }
+.nav-item:hover svg { opacity: 1; }
+.nav-item.active {
+  background: var(--active-bg);
+  color: var(--text-dark);
+  font-weight: 500;
+}
+.nav-item.active svg { opacity: 1; }
+.nav-item.danger { color: #c53030; }
+.nav-item.danger svg { color: #c53030; }
+.nav-item.danger:hover { background: #fff5f5; }
+ 
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+ 
+.sidebar-footer {
+  padding: 14px 18px;
+  font-size: 10px;
+  color: var(--text-soft);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+ 
+/* ─── Main Layout ───────────────────────────────── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+ 
+/* ─── Topbar ────────────────────────────────────── */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+ 
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-icon {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.page-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  letter-spacing: -.01em;
+}
+ 
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+ 
+/* 言語ボタン */
+.lang-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  user-select: none;
+}
+.lang-btn:hover { background: var(--hover-bg); }
+.lang-btn.open { border-color: #aaa; }
+.lang-btn svg { opacity: .6; }
+.lang-btn .chevron {
+  font-size: 9px;
+  opacity: .5;
+  transition: transform 200ms ease;
+  display: inline-block;
+}
+.lang-btn.open .chevron { transform: rotate(180deg); }
+ 
+/* スマホアイコン */
+.device-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 30px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-mid);
+}
+.device-btn:hover { background: var(--hover-bg); }
+ 
+/* ─── 検索エリア（固定） ─────────────────────────── */
+.search-area {
+  padding: 12px 24px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+ 
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 420px;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-soft);
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  padding: 9px 14px 9px 38px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.search-input::placeholder { color: var(--text-soft); }
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43,91,165,.1);
+}
+ 
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--text-dark);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.btn-add:hover { background: #333; }
+ 
+/* ─── テーブルエリア（スクロール） ─────────────────── */
+.table-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+ 
+.table-area::-webkit-scrollbar { width: 6px; }
+.table-area::-webkit-scrollbar-track { background: transparent; }
+.table-area::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+.table-area::-webkit-scrollbar-thumb:hover { background: #ccc; }
+ 
+.count-bar {
+  padding: 10px 24px 8px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+.count-bar span { font-weight: 500; color: var(--text-dark); }
+ 
+/* テーブル */
+.dept-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+ 
+.dept-table thead {
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+ 
+.dept-table th {
+  padding: 10px 24px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-soft);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--transition);
+}
+.dept-table th:hover { color: var(--text-dark); }
+.dept-table th .sort-icon {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 4px;
+  opacity: .35;
+  vertical-align: middle;
+  gap: 1px;
+}
+.dept-table th.sorted { color: var(--accent); }
+.dept-table th.sorted .sort-icon { opacity: 1; }
+ 
+.dept-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-dark);
+  transition: background var(--transition);
+}
+ 
+.dept-table tbody tr {
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.dept-table tbody tr:hover td { background: var(--hover-bg); }
+.dept-table tbody tr:last-child td { border-bottom: none; }
+ 
+.dept-id {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+.dept-code {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-mid);
+}
+ 
+/* 空の状態 */
+.empty-state {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-soft);
+  font-size: 13px;
+}
+.empty-state svg { margin-bottom: 12px; opacity: .3; }
+ 
+/* ─── 言語ドロップダウン ─────────────────────────── */
+.lang-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(1px);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.lang-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+ 
+.lang-dropdown {
+  position: fixed;
+  z-index: 201;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0,0,0,.16);
+  min-width: 200px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px) scale(.97);
+  transform-origin: top right;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.lang-dropdown.show {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1);
+}
+ 
+.lang-dropdown-header {
+  padding: 10px 14px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-soft);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+ 
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background var(--transition);
+  font-size: 13px;
+  color: var(--text-dark);
+}
+.lang-option:hover { background: var(--hover-bg); }
+.lang-option.active {
+  background: #eef3fb;
+  color: var(--accent);
+  font-weight: 500;
+}
+.lang-flag {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.lang-label-main { font-weight: 500; }
+.lang-label-sub {
+  font-size: 11px;
+  color: var(--text-soft);
+  margin-left: auto;
+  font-family: var(--mono);
+}
+.lang-check {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 14px;
+  display: none;
+}
+.lang-option.active .lang-check { display: block; }
+.lang-option.active .lang-label-sub { display: none; }
+ 
+/* ─── トースト通知 ──────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--text-dark);
+  color: #fff;
+  padding: 11px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 200ms, transform 200ms;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+ 
+<!-- ═══ サイドバー ═══════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-main">社員情報管理システム</div>
+    <div class="logo-sub">Employee Management System</div>
+  </div>
+ 
+  <nav class="nav-body">
+    <div class="nav-section-label">社員</div>
+ 
+    <a class="nav-item" href="employee_list.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      社員一覧
+    </a>
+    <a class="nav-item" href="employee_add.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+        <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+      </svg>
+      社員追加
+    </a>
+ 
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">部門</div>
+ 
+    <a class="nav-item active" href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="14" rx="2"/>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+      </svg>
+      部門一覧
+    </a>
+    <a class="nav-item" href="dept_add.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="14" rx="2"/>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        <line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/>
+      </svg>
+      部門追加
+    </a>
+ 
+    <div class="nav-divider"></div>
+ 
+    <a class="nav-item danger" href="#" onclick="confirmLogout(event)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      ログアウト
+    </a>
+  </nav>
+ 
+  <div class="sidebar-footer">
+    @2026<br>Employee Management System
+  </div>
+</aside>
+ 
+<!-- ═══ メインエリア ══════════════════════════════ -->
+<div class="main">
+ 
+  <!-- トップバー（固定） -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="page-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <span class="page-title">部門一覧</span>
+    </div>
+    <div class="topbar-right">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()" aria-haspopup="listbox" aria-expanded="false">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span id="langLabel">JP</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="device-btn" title="モバイル表示">
+        <svg width="14" height="16" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="1" y="1" width="12" height="18" rx="2"/>
+          <line x1="5" y1="17" x2="9" y2="17"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+ 
+  <!-- 検索エリア（固定） -->
+  <div class="search-area">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" class="search-input" id="searchInput"
+             placeholder="部門ID・部門コード・部門で検索"
+             oninput="filterTable(this.value)" autocomplete="off">
+    </div>
+  </div>
+ 
+  <!-- テーブルエリア（スクロール可） -->
+  <div class="table-area">
+    <div class="count-bar">
+      全 <span id="countNum">7</span> 件
+    </div>
+    <table class="dept-table" id="deptTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)" id="th0">
+            部門ID
+            <span class="sort-icon">
+              <svg width="8" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0Z" fill="currentColor"/></svg>
+              <svg width="8" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8Z" fill="currentColor"/></svg>
+            </span>
+          </th>
+          <th onclick="sortTable(1)" id="th1">
+            部門コード
+            <span class="sort-icon">
+              <svg width="8" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0Z" fill="currentColor"/></svg>
+              <svg width="8" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8Z" fill="currentColor"/></svg>
+            </span>
+          </th>
+          <th onclick="sortTable(2)" id="th2">
+            部門名
+            <span class="sort-icon">
+              <svg width="8" height="5" viewBox="0 0 8 5"><path d="M4 0L8 5H0Z" fill="currentColor"/></svg>
+              <svg width="8" height="5" viewBox="0 0 8 5"><path d="M4 5L0 0H8Z" fill="currentColor"/></svg>
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- JS で生成 -->
+      </tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <div>「<span id="emptyQuery"></span>」に一致する部門が見つかりませんでした</div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══ 言語ドロップダウン ════════════════════════ -->
+<div class="lang-overlay" id="langOverlay" onclick="closeLang()"></div>
+<div class="lang-dropdown" id="langDropdown" role="listbox">
+  <div class="lang-dropdown-header">言語を選択</div>
+</div>
+ 
+<!-- トースト -->
+<div class="toast" id="toast"></div>
+ 
+<script>
+/* ─── データ ──────────────────────────────── */
+const DEPARTMENTS = [
+  { id: '001', code: 'DEPT001', name: '営業部' },
+  { id: '002', code: 'DEPT002', name: '開発部' },
+  { id: '003', code: 'DEPT003', name: '経理部' },
+  { id: '004', code: 'DEPT004', name: '人事部' },
+  { id: '005', code: 'DEPT005', name: '総務部' },
+  { id: '006', code: 'DEPT006', name: 'マーケティング部' },
+  { id: '007', code: 'DEPT007', name: '法務部' },
+];
+ 
+/* ─── 言語データ ───────────────────────────── */
+const LANGUAGES = [
+  { code: 'ja',    flag: '🇯🇵', label: '日本語',       sub: 'Japanese',    short: 'JP' },
+  { code: 'en',    flag: '🇺🇸', label: 'English',      sub: 'English',     short: 'EN' },
+  { code: 'zh-tw', flag: '🇹🇼', label: '繁體字',       sub: 'Traditional', short: 'TW' },
+  { code: 'zh-cn', flag: '🇨🇳', label: '简体字',       sub: 'Simplified',  short: 'CN' },
+  { code: 'ko',    flag: '🇰🇷', label: '한국어',        sub: 'Korean',      short: 'KR' },
+  { code: 'es',    flag: '🇪🇸', label: 'Español',      sub: 'Spanish',     short: 'ES' },
+  { code: 'fr',    flag: '🇫🇷', label: 'Français',     sub: 'French',      short: 'FR' },
+  { code: 'de',    flag: '🇩🇪', label: 'Deutsch',      sub: 'German',      short: 'DE' },
+  { code: 'pt',    flag: '🇧🇷', label: 'Português',    sub: 'Portuguese',  short: 'PT' },
+  { code: 'it',    flag: '🇮🇹', label: 'Italiano',     sub: 'Italian',     short: 'IT' },
+  { code: 'vi',    flag: '🇻🇳', label: 'Tiếng Việt',   sub: 'Vietnamese',  short: 'VI' },
+  { code: 'th',    flag: '🇹🇭', label: 'ภาษาไทย',      sub: 'Thai',        short: 'TH' },
+];
+ 
+let currentLang  = 'ja';
+let sortCol      = -1;
+let sortAsc      = true;
+let currentData  = [...DEPARTMENTS];
+ 
+/* ─── 初期化 ───────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  buildLangMenu();
+  // localStorage から削除済み部門IDを除外
+  const deleted = (() => { try{ return JSON.parse(localStorage.getItem('dept_deleted')||'[]'); } catch(e){ return []; } })();
+  currentData = DEPARTMENTS.filter(d => !deleted.includes(d.id));
+  renderTable(currentData);
+});
+ 
+/* ─── テーブル描画 ─────────────────────────── */
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  const query = document.getElementById('searchInput').value;
+ 
+  document.getElementById('countNum').textContent = data.length;
+ 
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('emptyQuery').textContent = query;
+    return;
+  }
+  empty.style.display = 'none';
+ 
+  tbody.innerHTML = data.map(d => `
+    <tr data-id="${d.id}" class="dept-row">
+      <td><span class="dept-id">${d.id}</span></td>
+      <td><span class="dept-code">${d.code}</span></td>
+      <td>${d.name}</td>
+    </tr>
+  `).join('');
+ 
+  // イベントリスナーを各行に付与（inline onclickより確実）
+  document.querySelectorAll('.dept-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function() {
+      window.location.href = 'dept_detail.html?id=' + this.dataset.id;
+    });
+  });
+}
+ 
+/* ─── 検索フィルター ───────────────────────── */
+function filterTable(query) {
+  const deleted = (() => { try{ return JSON.parse(localStorage.getItem('dept_deleted')||'[]'); } catch(e){ return []; } })();
+  const q = query.trim().toLowerCase();
+  const base = DEPARTMENTS.filter(d => !deleted.includes(d.id));
+  const filtered = q
+    ? base.filter(d =>
+        d.id.toLowerCase().includes(q) ||
+        d.code.toLowerCase().includes(q) ||
+        d.name.toLowerCase().includes(q)
+      )
+    : base;
+ 
+  currentData = filtered;
+  if (sortCol >= 0) applySort(sortCol, sortAsc, false);
+  else renderTable(currentData);
+}
+ 
+/* ─── ソート ───────────────────────────────── */
+function sortTable(col) {
+  const keys = ['id','code','name'];
+  if (sortCol === col) { sortAsc = !sortAsc; }
+  else { sortCol = col; sortAsc = true; }
+ 
+  document.querySelectorAll('.dept-table th').forEach((th, i) => {
+    th.classList.toggle('sorted', i === col);
+  });
+ 
+  applySort(col, sortAsc, true);
+}
+ 
+function applySort(col, asc, rerender) {
+  const keys = ['id','code','name'];
+  currentData.sort((a, b) =>
+    asc
+      ? a[keys[col]].localeCompare(b[keys[col]], 'ja')
+      : b[keys[col]].localeCompare(a[keys[col]], 'ja')
+  );
+  if (rerender) renderTable(currentData);
+}
+ 
+/* ─── 言語メニュー ─────────────────────────── */
+function buildLangMenu() {
+  const dd = document.getElementById('langDropdown');
+  const header = dd.querySelector('.lang-dropdown-header');
+  dd.innerHTML = '';
+  dd.appendChild(header);
+ 
+  LANGUAGES.forEach(lang => {
+    const opt = document.createElement('div');
+    opt.className = 'lang-option' + (lang.code === currentLang ? ' active' : '');
+    opt.setAttribute('role', 'option');
+    opt.innerHTML = `
+      <span class="lang-flag">${lang.flag}</span>
+      <span class="lang-label-main">${lang.label}</span>
+      <span class="lang-label-sub">${lang.sub}</span>
+      <span class="lang-check">✓</span>
+    `;
+    opt.onclick = () => selectLang(lang);
+    dd.appendChild(opt);
+  });
+}
+ 
+function toggleLang() {
+  const btn     = document.getElementById('langBtn');
+  const overlay = document.getElementById('langOverlay');
+  const dd      = document.getElementById('langDropdown');
+  const isOpen  = dd.classList.contains('show');
+ 
+  if (isOpen) { closeLang(); return; }
+ 
+  // ドロップダウンをボタンの下に配置
+  const rect = btn.getBoundingClientRect();
+  dd.style.top   = (rect.bottom + 6) + 'px';
+  dd.style.right = (window.innerWidth - rect.right) + 'px';
+ 
+  overlay.classList.add('show');
+  dd.classList.add('show');
+  btn.classList.add('open');
+  btn.setAttribute('aria-expanded', 'true');
+}
+ 
+function closeLang() {
+  document.getElementById('langOverlay').classList.remove('show');
+  document.getElementById('langDropdown').classList.remove('show');
+  document.getElementById('langBtn').classList.remove('open');
+  document.getElementById('langBtn').setAttribute('aria-expanded', 'false');
+}
+ 
+function selectLang(lang) {
+  currentLang = lang.code;
+  document.getElementById('langLabel').textContent = lang.short;
+  buildLangMenu();
+  closeLang();
+  showToast(`言語を「${lang.label}」に変更しました`);
+}
+ 
+/* ─── ログアウト ───────────────────────────── */
+function confirmLogout(e) {
+  e.preventDefault();
+  if (confirm('ログアウトしますか？')) {
+    showToast('ログアウトしました');
+  }
+}
+ 
+/* ─── トースト通知 ─────────────────────────── */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+ 
+/* ─── キーボードショートカット ─────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLang();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+</script>
+</body>
+</html>
+ 
