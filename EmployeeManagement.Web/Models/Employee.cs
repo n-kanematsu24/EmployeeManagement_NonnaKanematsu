@@ -7,6 +7,7 @@ namespace EmployeeManagement.Web.Models
     public class Employee
     {
         [Key]
+        [Column("id")]
         public int Id { get; set; }
 
         [Column("employee_no")]
@@ -20,5 +21,12 @@ namespace EmployeeManagement.Web.Models
 
         [Column("email")]
         public string? Email { get; set; }
+
+        // DBの dept_id に合わせる
+        [Column("dept_id")]
+        public int? DeptId { get; set; }
+
+        // JOIN用
+        public Department? Department { get; set; }
     }
 }
