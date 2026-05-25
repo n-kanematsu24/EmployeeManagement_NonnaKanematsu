@@ -12,5 +12,20 @@ namespace EmployeeManagement.Web.Models
 
         [Column("dept_name")]
         public string? DeptName { get; set; }
+
+        [Column("is_deleted")]
+        public bool? IsDeleted { get; set; }
+
+        [Column("created_at")]
+        public DateTime? CreatedAt { get; set; }
+
+        [Column("updated_at")]
+        public DateTime? UpdatedAt { get; set; }
+
+        [Column("updated_id")]
+        public int? UpdatedId { get; set; }
+
+        // JOIN用
+        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
     }
 }
