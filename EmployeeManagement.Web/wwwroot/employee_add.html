@@ -293,59 +293,35 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-dark);font-si
 <div class="toast" id="toast"></div>
  
 <script>
-// 共有社員データ（全ファイルで同じ定義）
-const EMPLOYEES = [
-  {id:'EMP001',lastName:'田中',firstName:'太郎',dept:'営業部',deptId:'001',email:'t-tanaka@example.com',phone:'090-1234-5678',status:'在籍',hireDate:'2015/04/01',birthDate:'1990/04/15',created:'2015/04/01 9:00:00',updated:'2024/10/15 14:32:11'},
-  {id:'EMP002',lastName:'鈴木',firstName:'花子',dept:'開発部',deptId:'002',email:'h-suzuki@example.com',phone:'090-2345-6789',status:'在籍',hireDate:'2018/04/01',birthDate:'1993/07/22',created:'2018/04/01 9:00:00',updated:'2024/09/01 10:00:00'},
-  {id:'EMP003',lastName:'中村',firstName:'勇気',dept:'人事部',deptId:'004',email:'y-nakamura@example.com',phone:'080-3456-7890',status:'休職',hireDate:'2012/07/01',birthDate:'1988/03/10',created:'2012/07/01 9:00:00',updated:'2024/06/15 09:00:00'},
-  {id:'EMP004',lastName:'',firstName:'John Smith',dept:'開発部',deptId:'002',email:'j-smith@example.com',phone:'070-4567-8901',status:'在籍',hireDate:'2020/01/15',birthDate:'1991/11/30',created:'2020/01/15 9:00:00',updated:'2024/11/01 11:30:00'},
-  {id:'EMP005',lastName:'佐藤',firstName:'静香',dept:'営業部',deptId:'001',email:'s-sato@example.com',phone:'090-5678-9012',status:'退職',hireDate:'2010/04/01',birthDate:'1985/06/18',created:'2010/04/01 9:00:00',updated:'2023/03/31 17:00:00'},
-  {id:'EMP006',lastName:'伊藤',firstName:'誠',dept:'経理部',deptId:'003',email:'m-ito@example.com',phone:'080-6789-0123',status:'在籍',hireDate:'2014/10/01',birthDate:'1989/09/05',created:'2014/10/01 9:00:00',updated:'2024/08/20 13:00:00'},
-  {id:'EMP007',lastName:'高橋',firstName:'良子',dept:'人事部',deptId:'004',email:'r-takahashi@example.com',phone:'090-7890-1234',status:'在籍',hireDate:'2016/04/01',birthDate:'1992/02/28',created:'2016/04/01 9:00:00',updated:'2024/10/01 09:30:00'},
-  {id:'EMP008',lastName:'加藤',firstName:'博文',dept:'総務部',deptId:'005',email:'h-kato@example.com',phone:'080-8901-2345',status:'在籍',hireDate:'2009/04/01',birthDate:'1984/12/03',created:'2009/04/01 9:00:00',updated:'2024/07/15 15:00:00'},
-  {id:'EMP009',lastName:'木村',firstName:'葵',dept:'マーケティング部',deptId:'006',email:'a-kimura@example.com',phone:'070-9012-3456',status:'在籍',hireDate:'2019/07/01',birthDate:'1994/05/20',created:'2019/07/01 9:00:00',updated:'2024/12/01 10:00:00'},
-  {id:'EMP010',lastName:'森',firstName:'大介',dept:'法務部',deptId:'007',email:'d-mori@example.com',phone:'090-0123-4567',status:'在籍',hireDate:'2011/04/01',birthDate:'1986/08/14',created:'2011/04/01 9:00:00',updated:'2024/09/30 16:00:00'},
-  {id:'EMP011',lastName:'松本',firstName:'大輔',dept:'営業部',deptId:'001',email:'d-matsumoto@example.com',phone:'080-1234-5670',status:'在籍',hireDate:'2017/04/01',birthDate:'1992/01/15',created:'2017/04/01 9:00:00',updated:'2024/11/15 11:00:00'},
-  {id:'EMP012',lastName:'高橋',firstName:'美咲',dept:'営業部',deptId:'001',email:'m-takahashi2@example.com',phone:'090-2345-6780',status:'在籍',hireDate:'2021/04/01',birthDate:'1998/04/10',created:'2021/04/01 9:00:00',updated:'2024/10/20 14:00:00'},
-  {id:'EMP013',lastName:'山田',firstName:'花子',dept:'開発部',deptId:'002',email:'h-yamada@example.com',phone:'080-3456-7891',status:'在籍',hireDate:'2016/10/01',birthDate:'1991/08/25',created:'2016/10/01 9:00:00',updated:'2024/08/01 09:00:00'},
-  {id:'EMP014',lastName:'清水',firstName:'奈緒',dept:'開発部',deptId:'002',email:'n-shimizu@example.com',phone:'070-4567-8902',status:'休職',hireDate:'2018/07/01',birthDate:'1993/12/08',created:'2018/07/01 9:00:00',updated:'2024/05/01 10:00:00'},
-  {id:'EMP015',lastName:'渡辺',firstName:'美紀',dept:'経理部',deptId:'003',email:'m-watanabe@example.com',phone:'090-5678-9013',status:'在籍',hireDate:'2013/04/01',birthDate:'1988/07/16',created:'2013/04/01 9:00:00',updated:'2024/09/15 13:30:00'},
-  {id:'EMP016',lastName:'小林',firstName:'隆',dept:'経理部',deptId:'003',email:'r-kobayashi@example.com',phone:'080-6789-0124',status:'退職',hireDate:'2008/04/01',birthDate:'1983/03/22',created:'2008/04/01 9:00:00',updated:'2022/09/30 17:00:00'},
-  {id:'EMP017',lastName:'松本',firstName:'剛',dept:'人事部',deptId:'004',email:'g-matsumoto@example.com',phone:'090-7890-1235',status:'在籍',hireDate:'2015/07/01',birthDate:'1990/10/05',created:'2015/07/01 9:00:00',updated:'2024/10/01 12:00:00'},
-  {id:'EMP018',lastName:'石田',firstName:'智子',dept:'総務部',deptId:'005',email:'t-ishida@example.com',phone:'080-8901-2346',status:'在籍',hireDate:'2012/04/01',birthDate:'1987/05/30',created:'2012/04/01 9:00:00',updated:'2024/11/01 09:00:00'},
-  {id:'EMP019',lastName:'中村',firstName:'博',dept:'総務部',deptId:'005',email:'h-nakamura2@example.com',phone:'070-9012-3457',status:'退職',hireDate:'2005/04/01',birthDate:'1980/01/20',created:'2005/04/01 9:00:00',updated:'2021/03/31 17:00:00'},
-  {id:'EMP020',lastName:'林',firstName:'拓也',dept:'マーケティング部',deptId:'006',email:'t-hayashi@example.com',phone:'090-0123-4568',status:'在籍',hireDate:'2020/04/01',birthDate:'1996/09/12',created:'2020/04/01 9:00:00',updated:'2024/12/10 11:00:00'},
-  {id:'EMP021',lastName:'岡田',firstName:'幸子',dept:'法務部',deptId:'007',email:'s-okada@example.com',phone:'080-1234-5679',status:'在籍',hireDate:'2013/10/01',birthDate:'1988/11/28',created:'2013/10/01 9:00:00',updated:'2024/07/01 14:00:00'},
-];
- 
-const STATUS_COLORS = {
-  '在籍': {dot:'#2D7A3A', bg:'#EAF4EA', text:'#2D7A3A'},
-  '休職': {dot:'#A07800', bg:'#FFF8E1', text:'#A07800'},
-  '退職': {dot:'#888888', bg:'#F5F5F5', text:'#888888'},
+const STATUS_COLORS={
+  '在籍':{dot:'#2D7A3A',bg:'#EAF4EA',text:'#2D7A3A'},
+  '休職':{dot:'#A07800',bg:'#FFF8E1',text:'#A07800'},
+  '退職':{dot:'#888888',bg:'#F5F5F5',text:'#888888'},
 };
- 
-const DEPARTMENTS = [
-  {id:'001',code:'DEPT001',name:'営業部'},
-  {id:'002',code:'DEPT002',name:'開発部'},
-  {id:'003',code:'DEPT003',name:'経理部'},
-  {id:'004',code:'DEPT004',name:'人事部'},
-  {id:'005',code:'DEPT005',name:'総務部'},
-  {id:'006',code:'DEPT006',name:'マーケティング部'},
-  {id:'007',code:'DEPT007',name:'法務部'},
-];
 const LANGUAGES=[{code:'ja',flag:'🇯🇵',label:'日本語',sub:'Japanese',short:'JP'},{code:'en',flag:'🇺🇸',label:'English',sub:'English',short:'EN'},{code:'zh-tw',flag:'🇹🇼',label:'繁體字',sub:'Traditional',short:'TW'},{code:'zh-cn',flag:'🇨🇳',label:'简体字',sub:'Simplified',short:'CN'},{code:'ko',flag:'🇰🇷',label:'한국어',sub:'Korean',short:'KR'},{code:'es',flag:'🇪🇸',label:'Español',sub:'Spanish',short:'ES'},{code:'fr',flag:'🇫🇷',label:'Français',sub:'French',short:'FR'},{code:'de',flag:'🇩🇪',label:'Deutsch',sub:'German',short:'DE'},{code:'pt',flag:'🇧🇷',label:'Português',sub:'Portuguese',short:'PT'},{code:'it',flag:'🇮🇹',label:'Italiano',sub:'Italian',short:'IT'},{code:'vi',flag:'🇻🇳',label:'Tiếng Việt',sub:'Vietnamese',short:'VI'},{code:'th',flag:'🇹🇭',label:'ภาษาไทย',sub:'Thai',short:'TH'}];
 let currentLang='ja';
  
-document.addEventListener('DOMContentLoaded',()=>{
-  // 部門セレクトを生成
-  const sel=document.getElementById('empDept');
-  DEPARTMENTS.forEach(d=>{
-    const opt=document.createElement('option');
-    opt.value=d.id; opt.textContent=d.name;
-    sel.appendChild(opt);
-  });
+document.addEventListener('DOMContentLoaded', async ()=>{
+  if(localStorage.getItem('logged_in') !== 'true'){ location.replace('login.html'); return; }
   buildLangMenu();
+  await loadDepartments();
 });
+ 
+async function loadDepartments(){
+  try{
+    const res=await fetch('/api/Department');
+    if(!res.ok) throw new Error();
+    const depts=await res.json();
+    const sel=document.getElementById('empDept');
+    depts.forEach(d=>{
+      const opt=document.createElement('option');
+      opt.value=d.id; opt.textContent=d.deptName;
+      sel.appendChild(opt);
+    });
+  }catch(e){
+    showToast('部門データの取得に失敗しました');
+  }
+}
  
 function updateStatusDot(){
   const v=document.getElementById('empStatus').value;
@@ -376,55 +352,59 @@ function validate(){
     ['empPhone','errPhone','電話番号を入力してください'],
     ['empBirth','errBirth','生年月日を入力してください'],
   ];
-  required.forEach(([id,eid])=>{
+  required.forEach(([id,eid,msg])=>{
     const v=document.getElementById(id).value.trim();
     const err=document.getElementById(eid),inp=document.getElementById(id);
-    if(!v){inp.classList.add('error');err.classList.add('show');ok=false}
+    if(!v){inp.classList.add('error');err.textContent=msg;err.classList.add('show');ok=false}
     else{inp.classList.remove('error');err.classList.remove('show')}
   });
-  // 部門
   const dv=document.getElementById('empDept').value;
   const de=document.getElementById('errEmpDept'),di=document.getElementById('empDept');
   if(!dv){di.classList.add('error');de.classList.add('show');ok=false}else{di.classList.remove('error');de.classList.remove('show')}
-  // 在籍状態
   const sv=document.getElementById('empStatus').value;
   const se=document.getElementById('errStatus'),si=document.getElementById('empStatus');
   if(!sv){si.classList.add('error');se.classList.add('show');ok=false}else{si.classList.remove('error');se.classList.remove('show')}
   return ok;
 }
  
-function submitForm(){
-  if(!validate())return;
-  const deptId=document.getElementById('empDept').value;
-  const dept=DEPARTMENTS.find(d=>d.id===deptId);
-  const now=new Date().toLocaleDateString('ja-JP')+' '+new Date().toLocaleTimeString('ja-JP');
-  const newEmp={
-    id:document.getElementById('empId').value.trim(),
-    lastName:document.getElementById('empLastName').value.trim(),
-    firstName:document.getElementById('empFirstName').value.trim(),
-    dept:dept?dept.name:'',deptId,
-    email:document.getElementById('empEmail').value.trim(),
-    phone:document.getElementById('empPhone').value.trim(),
-    status:document.getElementById('empStatus').value,
-    hireDate:document.getElementById('empHire').value.replace(/-/g,'/'),
-    birthDate:document.getElementById('empBirth').value.replace(/-/g,'/'),
-    created:now,updated:now
+function statusToInt(s){ return s==='在籍'?1:s==='休職'?2:s==='退職'?3:0; }
+ 
+async function submitForm(){
+  if(!validate()) return;
+  const hireRaw=document.getElementById('empHire').value;
+  const birthRaw=document.getElementById('empBirth').value;
+  const body={
+    employeeNo: document.getElementById('empId').value.trim(),
+    lastName:   document.getElementById('empLastName').value.trim(),
+    firstName:  document.getElementById('empFirstName').value.trim(),
+    email:      document.getElementById('empEmail').value.trim(),
+    phone:      document.getElementById('empPhone').value.trim(),
+    deptId:     parseInt(document.getElementById('empDept').value),
+    status:     statusToInt(document.getElementById('empStatus').value),
+    hireDate:   hireRaw||null,
+    birthDate:  birthRaw,
+    isDeleted:  false,
   };
   try{
-    const added=JSON.parse(localStorage.getItem('emp_added')||'[]');
-    added.push(newEmp);
-    localStorage.setItem('emp_added',JSON.stringify(added));
-  }catch(e){}
-  const name=newEmp.lastName?newEmp.lastName+' '+newEmp.firstName:newEmp.firstName;
-  showToast(`「${name}」を登録しました`);
-  setTimeout(()=>location.href='employee_list.html',1200);
+    const res=await fetch('/api/Employee',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error();
+    const name=(body.lastName||'')+' '+(body.firstName||'');
+    showToast(`「${name}」を登録しました`);
+    setTimeout(()=>location.href='employee_list.html',1200);
+  }catch(e){
+    showToast('登録に失敗しました');
+  }
 }
  
 function buildLangMenu(){const dd=document.getElementById('langDropdown'),hdr=dd.querySelector('.lang-dropdown-header');dd.innerHTML='';dd.appendChild(hdr);LANGUAGES.forEach(l=>{const opt=document.createElement('div');opt.className='lang-option'+(l.code===currentLang?' active':'');opt.innerHTML=`<span class="lang-flag">${l.flag}</span><span class="lang-label-main">${l.label}</span><span class="lang-label-sub">${l.sub}</span><span class="lang-check">✓</span>`;opt.onclick=()=>selectLang(l);dd.appendChild(opt)})}
 function toggleLang(){const btn=document.getElementById('langBtn'),dd=document.getElementById('langDropdown');if(dd.classList.contains('show')){closeLang();return}const r=btn.getBoundingClientRect();dd.style.top=(r.bottom+6)+'px';dd.style.right=(window.innerWidth-r.right)+'px';document.getElementById('langOverlay').classList.add('show');dd.classList.add('show');btn.classList.add('open')}
 function closeLang(){document.getElementById('langOverlay').classList.remove('show');document.getElementById('langDropdown').classList.remove('show');document.getElementById('langBtn').classList.remove('open')}
 function selectLang(l){currentLang=l.code;document.getElementById('langLabel').textContent=l.short;buildLangMenu();closeLang();showToast(`言語を「${l.label}」に変更しました`)}
-function confirmLogout(e){e.preventDefault();if(confirm('ログアウトしますか？'))showToast('ログアウトしました')}
+function confirmLogout(e){e.preventDefault();if(confirm('ログアウトしますか？')){try{localStorage.removeItem('logged_in');localStorage.removeItem('login_user')}catch(e){}location.href='login.html'}}
 let toastTimer;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLang()});
