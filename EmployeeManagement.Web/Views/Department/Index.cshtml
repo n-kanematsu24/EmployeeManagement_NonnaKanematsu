@@ -1,0 +1,66 @@
+@model List<DepartmentViewModel>
+@{
+    ViewData["Title"] = "部門一覧";
+}
+
+@section Breadcrumb {
+  <div class="page-icon">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+  </div>
+  <span class="page-title">部門一覧</span>
+}
+
+<div class="fade-up">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <div class="search-wrap" style="flex:1;max-width:400px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="部門名・IDで検索" oninput="filterTable(this.value)">
+    </div>
+  </div>
+
+  <div class="count-bar">全 <span id="countNum">@Model.Count</span> 件</div>
+
+  <div class="card" style="overflow:hidden">
+    <table class="data-table" id="deptTable">
+      <thead>
+        <tr>
+          <th>部門ID</th>
+          <th>部門名</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var dept in Model)
+        {
+          <tr onclick="location.href='@Url.Action("Detail","Department",new{id=dept.Id})'"
+              data-name="@dept.DeptName" data-id="@dept.Id">
+            <td><span style="font-family:var(--mono);font-weight:500">@dept.DeptCode</span></td>
+            <td>@dept.DeptName</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (!Model.Any())
+    {
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <div style="margin-top:8px">部門が登録されていません</div>
+      </div>
+    }
+  </div>
+</div>
+
+@section Scripts {
+<script>
+function filterTable(q) {
+  q = q.toLowerCase();
+  const rows = document.querySelectorAll('#deptTable tbody tr');
+  let count = 0;
+  rows.forEach(r => {
+    const show = !q || r.dataset.name.toLowerCase().includes(q) || String(r.dataset.id).includes(q);
+    r.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+  document.getElementById('countNum').textContent = count;
+}
+</script>
+}

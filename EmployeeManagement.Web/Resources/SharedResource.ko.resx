@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+  <data name="System.Title" xml:space="preserve"><value>직원 정보 관리 시스템</value></data>
+  <data name="System.SubTitle" xml:space="preserve"><value>Employee Management System</value></data>
+  <data name="Nav.EmployeeList" xml:space="preserve"><value>직원 목록</value></data>
+  <data name="Nav.EmployeeAdd" xml:space="preserve"><value>직원 추가</value></data>
+  <data name="Nav.DepartmentList" xml:space="preserve"><value>부서 목록</value></data>
+  <data name="Nav.DepartmentAdd" xml:space="preserve"><value>부서 추가</value></data>
+  <data name="Nav.Logout" xml:space="preserve"><value>로그아웃</value></data>
+  <data name="Nav.LogoutConfirm" xml:space="preserve"><value>로그아웃하시겠습니까?</value></data>
+  <data name="Label.EmployeeNo" xml:space="preserve"><value>직원 번호</value></data>
+  <data name="Label.LastName" xml:space="preserve"><value>성</value></data>
+  <data name="Label.FirstName" xml:space="preserve"><value>이름</value></data>
+  <data name="Label.FullName" xml:space="preserve"><value>성명</value></data>
+  <data name="Label.Email" xml:space="preserve"><value>이메일</value></data>
+  <data name="Label.Phone" xml:space="preserve"><value>전화번호</value></data>
+  <data name="Label.Department" xml:space="preserve"><value>부서</value></data>
+  <data name="Label.Status" xml:space="preserve"><value>재직 상태</value></data>
+  <data name="Label.HireDate" xml:space="preserve"><value>입사일</value></data>
+  <data name="Label.BirthDate" xml:space="preserve"><value>생년월일</value></data>
+  <data name="Label.DeptCode" xml:space="preserve"><value>부서 코드</value></data>
+  <data name="Label.DeptName" xml:space="preserve"><value>부서명</value></data>
+  <data name="Label.ProfileImage" xml:space="preserve"><value>프로필 이미지</value></data>
+  <data name="Label.DeptImage" xml:space="preserve"><value>부서 이미지</value></data>
+  <data name="Label.BasicInfo" xml:space="preserve"><value>기본 정보</value></data>
+  <data name="Label.Contact" xml:space="preserve"><value>연락처</value></data>
+  <data name="Label.Affiliation" xml:space="preserve"><value>소속・상태</value></data>
+  <data name="Label.Members" xml:space="preserve"><value>멤버</value></data>
+  <data name="Label.Preview" xml:space="preserve"><value>미리보기</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>재직</value></data>
+  <data name="Status.Leave" xml:space="preserve"><value>휴직</value></data>
+  <data name="Status.Resigned" xml:space="preserve"><value>퇴직</value></data>
+  <data name="Status.Unknown" xml:space="preserve"><value>알 수 없음</value></data>
+  <data name="Btn.Register" xml:space="preserve"><value>등록</value></data>
+  <data name="Btn.Update" xml:space="preserve"><value>수정</value></data>
+  <data name="Btn.Delete" xml:space="preserve"><value>삭제</value></data>
+  <data name="Btn.Cancel" xml:space="preserve"><value>취소</value></data>
+  <data name="Btn.Edit" xml:space="preserve"><value>편집</value></data>
+  <data name="Btn.Search" xml:space="preserve"><value>검색</value></data>
+  <data name="Btn.Logout" xml:space="preserve"><value>로그아웃</value></data>
+  <data name="Btn.Login" xml:space="preserve"><value>로그인</value></data>
+  <data name="Page.EmployeeList" xml:space="preserve"><value>직원 목록</value></data>
+  <data name="Page.EmployeeCreate" xml:space="preserve"><value>직원 등록</value></data>
+  <data name="Page.EmployeeEdit" xml:space="preserve"><value>직원 편집</value></data>
+  <data name="Page.EmployeeDetail" xml:space="preserve"><value>직원 상세</value></data>
+  <data name="Page.DeptList" xml:space="preserve"><value>부서 목록</value></data>
+  <data name="Page.DeptCreate" xml:space="preserve"><value>부서 등록</value></data>
+  <data name="Page.DeptEdit" xml:space="preserve"><value>부서 편집</value></data>
+  <data name="Page.DeptDetail" xml:space="preserve"><value>부서 상세</value></data>
+  <data name="Page.Login" xml:space="preserve"><value>로그인</value></data>
+  <data name="Msg.NoMembers" xml:space="preserve"><value>멤버가 없습니다</value></data>
+  <data name="Msg.NoData" xml:space="preserve"><value>데이터가 없습니다</value></data>
+  <data name="Msg.DeleteConfirm" xml:space="preserve"><value>이 작업은 취소할 수 없습니다.</value></data>
+  <data name="Msg.AutoCode" xml:space="preserve"><value>등록 후 자동으로 DEPT001 형식으로 채번됩니다.</value></data>
+  <data name="Msg.ReadOnly" xml:space="preserve"><value>자동 채번으로 변경 불가</value></data>
+  <data name="Msg.ImageDrop" xml:space="preserve"><value>클릭 또는 드래그 &amp; 드롭</value></data>
+  <data name="Hint.Select" xml:space="preserve"><value>선택해주세요</value></data>
+  <data name="Hint.SearchEmployee" xml:space="preserve"><value>이름・ID・이메일로 검색</value></data>
+  <data name="Hint.SearchDept" xml:space="preserve"><value>부서명・ID로 검색</value></data>
+  <data name="Confirm.DeleteEmployee" xml:space="preserve"><value>을(를) 삭제하시겠습니까?</value></data>
+  <data name="Confirm.DeleteDept" xml:space="preserve"><value>을(를) 삭제하시겠습니까?</value></data>
+  <data name="Footer.Copyright" xml:space="preserve"><value>2026 Employee Management System</value></data>
+  <data name="Login.Id" xml:space="preserve"><value>로그인 ID</value></data>
+  <data name="Login.Password" xml:space="preserve"><value>비밀번호</value></data>
+  <data name="Login.DemoHint" xml:space="preserve"><value>데모 계정: ID admin / 비밀번호 admin123</value></data>
+</root>

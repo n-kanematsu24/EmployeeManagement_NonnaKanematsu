@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+  <data name="System.Title" xml:space="preserve"><value>員工資訊管理系統</value></data>
+  <data name="System.SubTitle" xml:space="preserve"><value>Employee Management System</value></data>
+  <data name="Nav.EmployeeList" xml:space="preserve"><value>員工清單</value></data>
+  <data name="Nav.EmployeeAdd" xml:space="preserve"><value>新增員工</value></data>
+  <data name="Nav.DepartmentList" xml:space="preserve"><value>部門清單</value></data>
+  <data name="Nav.DepartmentAdd" xml:space="preserve"><value>新增部門</value></data>
+  <data name="Nav.Logout" xml:space="preserve"><value>登出</value></data>
+  <data name="Nav.LogoutConfirm" xml:space="preserve"><value>確定要登出嗎？</value></data>
+  <data name="Label.EmployeeNo" xml:space="preserve"><value>員工編號</value></data>
+  <data name="Label.LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Label.FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Label.FullName" xml:space="preserve"><value>姓名</value></data>
+  <data name="Label.Email" xml:space="preserve"><value>電子郵件</value></data>
+  <data name="Label.Phone" xml:space="preserve"><value>電話號碼</value></data>
+  <data name="Label.Department" xml:space="preserve"><value>部門</value></data>
+  <data name="Label.Status" xml:space="preserve"><value>在職狀態</value></data>
+  <data name="Label.HireDate" xml:space="preserve"><value>到職日期</value></data>
+  <data name="Label.BirthDate" xml:space="preserve"><value>出生日期</value></data>
+  <data name="Label.DeptCode" xml:space="preserve"><value>部門代碼</value></data>
+  <data name="Label.DeptName" xml:space="preserve"><value>部門名稱</value></data>
+  <data name="Label.ProfileImage" xml:space="preserve"><value>個人頭像</value></data>
+  <data name="Label.DeptImage" xml:space="preserve"><value>部門圖片</value></data>
+  <data name="Label.BasicInfo" xml:space="preserve"><value>基本資訊</value></data>
+  <data name="Label.Contact" xml:space="preserve"><value>聯絡方式</value></data>
+  <data name="Label.Affiliation" xml:space="preserve"><value>所屬・狀態</value></data>
+  <data name="Label.Members" xml:space="preserve"><value>成員</value></data>
+  <data name="Label.Preview" xml:space="preserve"><value>預覽</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>在職</value></data>
+  <data name="Status.Leave" xml:space="preserve"><value>留職停薪</value></data>
+  <data name="Status.Resigned" xml:space="preserve"><value>離職</value></data>
+  <data name="Status.Unknown" xml:space="preserve"><value>未知</value></data>
+  <data name="Btn.Register" xml:space="preserve"><value>登錄</value></data>
+  <data name="Btn.Update" xml:space="preserve"><value>更新</value></data>
+  <data name="Btn.Delete" xml:space="preserve"><value>刪除</value></data>
+  <data name="Btn.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Btn.Edit" xml:space="preserve"><value>編輯</value></data>
+  <data name="Btn.Search" xml:space="preserve"><value>搜尋</value></data>
+  <data name="Btn.Logout" xml:space="preserve"><value>登出</value></data>
+  <data name="Btn.Login" xml:space="preserve"><value>登入</value></data>
+  <data name="Page.EmployeeList" xml:space="preserve"><value>員工清單</value></data>
+  <data name="Page.EmployeeCreate" xml:space="preserve"><value>員工登錄</value></data>
+  <data name="Page.EmployeeEdit" xml:space="preserve"><value>編輯員工</value></data>
+  <data name="Page.EmployeeDetail" xml:space="preserve"><value>員工詳情</value></data>
+  <data name="Page.DeptList" xml:space="preserve"><value>部門清單</value></data>
+  <data name="Page.DeptCreate" xml:space="preserve"><value>新增部門</value></data>
+  <data name="Page.DeptEdit" xml:space="preserve"><value>編輯部門</value></data>
+  <data name="Page.DeptDetail" xml:space="preserve"><value>部門詳情</value></data>
+  <data name="Page.Login" xml:space="preserve"><value>登入</value></data>
+  <data name="Msg.NoMembers" xml:space="preserve"><value>暫無成員</value></data>
+  <data name="Msg.NoData" xml:space="preserve"><value>未找到資料</value></data>
+  <data name="Msg.DeleteConfirm" xml:space="preserve"><value>此操作無法撤銷。</value></data>
+  <data name="Msg.AutoCode" xml:space="preserve"><value>登錄後將自動生成 DEPT001 格式的代碼。</value></data>
+  <data name="Msg.ReadOnly" xml:space="preserve"><value>自動生成，不可更改</value></data>
+  <data name="Msg.ImageDrop" xml:space="preserve"><value>點擊或拖曳上傳</value></data>
+  <data name="Hint.Select" xml:space="preserve"><value>請選擇</value></data>
+  <data name="Hint.SearchEmployee" xml:space="preserve"><value>以姓名・編號・郵件搜尋</value></data>
+  <data name="Hint.SearchDept" xml:space="preserve"><value>以部門名・ID搜尋</value></data>
+  <data name="Confirm.DeleteEmployee" xml:space="preserve"><value>確定要刪除嗎？</value></data>
+  <data name="Confirm.DeleteDept" xml:space="preserve"><value>確定要刪除嗎？</value></data>
+  <data name="Footer.Copyright" xml:space="preserve"><value>2026 Employee Management System</value></data>
+  <data name="Login.Id" xml:space="preserve"><value>登入ID</value></data>
+  <data name="Login.Password" xml:space="preserve"><value>密碼</value></data>
+  <data name="Login.DemoHint" xml:space="preserve"><value>示範帳號：ID admin / 密碼 admin123</value></data>
+</root>

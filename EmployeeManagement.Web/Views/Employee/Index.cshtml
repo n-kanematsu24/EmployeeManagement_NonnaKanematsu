@@ -1,0 +1,95 @@
+@model List<EmployeeViewModel>
+@{
+    ViewData["Title"] = "社員一覧";
+}
+
+@section Breadcrumb {
+  <div class="page-icon">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+  </div>
+  <span class="page-title">社員一覧</span>
+}
+
+<div class="fade-up">
+  <!-- 検索バー -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <div class="search-wrap" style="flex:1;max-width:400px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="社員名・ID・メールで検索" oninput="filterTable(this.value)">
+    </div>
+    <select class="form-control" style="width:120px;padding:9px 32px 9px 12px" onchange="filterStatus(this.value)">
+      <option value="">全状態</option>
+      <option value="在籍">在籍</option>
+      <option value="休職">休職</option>
+      <option value="退職">退職</option>
+    </select>
+  </div>
+
+  <!-- カウント -->
+  <div class="count-bar">全 <span id="countNum">@Model.Count</span> 件</div>
+
+  <!-- テーブル -->
+  <div class="card" style="overflow:hidden">
+    <table class="data-table" id="empTable">
+      <thead>
+        <tr>
+          <th>社員番号</th>
+          <th>氏名</th>
+          <th>部門</th>
+          <th>メールアドレス</th>
+          <th>在籍状態</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var emp in Model)
+        {
+          <tr onclick="location.href='@Url.Action("Detail","Employee",new{id=emp.Id})'"
+              data-name="@emp.FullName" data-no="@emp.EmployeeNo" data-email="@emp.Email" data-status="@emp.StatusText">
+            <td><span style="font-family:var(--mono);font-weight:500">@emp.EmployeeNo</span></td>
+            <td>@emp.FullName</td>
+            <td>@emp.DeptName</td>
+            <td><span style="font-family:var(--mono);font-size:13px">@emp.Email</span></td>
+            <td>
+              <span class="status-badge" style="background:@emp.StatusBg;color:@emp.StatusColor">
+                <span class="status-dot" style="background:@emp.StatusColor"></span>
+                @emp.StatusText
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (!Model.Any())
+    {
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <div style="margin-top:8px">社員が登録されていません</div>
+      </div>
+    }
+  </div>
+</div>
+
+@section Scripts {
+<script>
+let statusFilter = '';
+function filterTable(q) {
+  q = q.toLowerCase();
+  const rows = document.querySelectorAll('#empTable tbody tr');
+  let count = 0;
+  rows.forEach(r => {
+    const matchQ = !q || r.dataset.name.toLowerCase().includes(q) ||
+      (r.dataset.no||'').toLowerCase().includes(q) ||
+      (r.dataset.email||'').toLowerCase().includes(q);
+    const matchS = !statusFilter || r.dataset.status === statusFilter;
+    const show = matchQ && matchS;
+    r.style.display = show ? '' : 'none';
+    if (show) count++;
+  });
+  document.getElementById('countNum').textContent = count;
+}
+function filterStatus(v) {
+  statusFilter = v;
+  filterTable(document.getElementById('searchInput').value);
+}
+</script>
+}

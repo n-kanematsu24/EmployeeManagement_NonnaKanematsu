@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+  <data name="System.Title" xml:space="preserve"><value>Sistema di Gestione Dipendenti</value></data>
+  <data name="System.SubTitle" xml:space="preserve"><value>Employee Management System</value></data>
+  <data name="Nav.EmployeeList" xml:space="preserve"><value>Dipendenti</value></data>
+  <data name="Nav.EmployeeAdd" xml:space="preserve"><value>Aggiungi Dipendente</value></data>
+  <data name="Nav.DepartmentList" xml:space="preserve"><value>Reparti</value></data>
+  <data name="Nav.DepartmentAdd" xml:space="preserve"><value>Aggiungi Reparto</value></data>
+  <data name="Nav.Logout" xml:space="preserve"><value>Disconnetti</value></data>
+  <data name="Nav.LogoutConfirm" xml:space="preserve"><value>Vuoi disconnetterti?</value></data>
+  <data name="Label.EmployeeNo" xml:space="preserve"><value>Employee No.</value></data>
+  <data name="Label.LastName" xml:space="preserve"><value>Last Name</value></data>
+  <data name="Label.FirstName" xml:space="preserve"><value>First Name</value></data>
+  <data name="Label.FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Label.Email" xml:space="preserve"><value>Email Address</value></data>
+  <data name="Label.Phone" xml:space="preserve"><value>Phone Number</value></data>
+  <data name="Label.Department" xml:space="preserve"><value>Department</value></data>
+  <data name="Label.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Label.HireDate" xml:space="preserve"><value>Hire Date</value></data>
+  <data name="Label.BirthDate" xml:space="preserve"><value>Date of Birth</value></data>
+  <data name="Label.DeptCode" xml:space="preserve"><value>Dept Code</value></data>
+  <data name="Label.DeptName" xml:space="preserve"><value>Department Name</value></data>
+  <data name="Label.ProfileImage" xml:space="preserve"><value>Profile Image</value></data>
+  <data name="Label.DeptImage" xml:space="preserve"><value>Department Image</value></data>
+  <data name="Label.BasicInfo" xml:space="preserve"><value>Basic Information</value></data>
+  <data name="Label.Contact" xml:space="preserve"><value>Contact</value></data>
+  <data name="Label.Affiliation" xml:space="preserve"><value>Department &amp; Status</value></data>
+  <data name="Label.Members" xml:space="preserve"><value>Members</value></data>
+  <data name="Label.Preview" xml:space="preserve"><value>Preview</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>Attivo</value></data>
+  <data name="Status.Leave" xml:space="preserve"><value>In Congedo</value></data>
+  <data name="Status.Resigned" xml:space="preserve"><value>Dimesso</value></data>
+  <data name="Status.Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Btn.Register" xml:space="preserve"><value>Registra</value></data>
+  <data name="Btn.Update" xml:space="preserve"><value>Aggiorna</value></data>
+  <data name="Btn.Delete" xml:space="preserve"><value>Elimina</value></data>
+  <data name="Btn.Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="Btn.Edit" xml:space="preserve"><value>Modifica</value></data>
+  <data name="Btn.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Btn.Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="Btn.Login" xml:space="preserve"><value>Accedi</value></data>
+  <data name="Page.EmployeeList" xml:space="preserve"><value>Employee List</value></data>
+  <data name="Page.EmployeeCreate" xml:space="preserve"><value>Add Employee</value></data>
+  <data name="Page.EmployeeEdit" xml:space="preserve"><value>Edit Employee</value></data>
+  <data name="Page.EmployeeDetail" xml:space="preserve"><value>Employee Details</value></data>
+  <data name="Page.DeptList" xml:space="preserve"><value>Department List</value></data>
+  <data name="Page.DeptCreate" xml:space="preserve"><value>Add Department</value></data>
+  <data name="Page.DeptEdit" xml:space="preserve"><value>Edit Department</value></data>
+  <data name="Page.DeptDetail" xml:space="preserve"><value>Department Details</value></data>
+  <data name="Page.Login" xml:space="preserve"><value>Accedi</value></data>
+  <data name="Msg.NoMembers" xml:space="preserve"><value>No members</value></data>
+  <data name="Msg.NoData" xml:space="preserve"><value>No data found</value></data>
+  <data name="Msg.DeleteConfirm" xml:space="preserve"><value>This action cannot be undone.</value></data>
+  <data name="Msg.AutoCode" xml:space="preserve"><value>Code will be auto-generated (DEPT001 format) after registration.</value></data>
+  <data name="Msg.ReadOnly" xml:space="preserve"><value>Auto-generated, cannot be changed</value></data>
+  <data name="Msg.ImageDrop" xml:space="preserve"><value>Click or drag &amp; drop</value></data>
+  <data name="Hint.Select" xml:space="preserve"><value>Select...</value></data>
+  <data name="Hint.SearchEmployee" xml:space="preserve"><value>Search by name, ID, or email</value></data>
+  <data name="Hint.SearchDept" xml:space="preserve"><value>Search by name or ID</value></data>
+  <data name="Confirm.DeleteEmployee" xml:space="preserve"><value>will be deleted. Are you sure?</value></data>
+  <data name="Confirm.DeleteDept" xml:space="preserve"><value>will be deleted. Are you sure?</value></data>
+  <data name="Footer.Copyright" xml:space="preserve"><value>2026 Employee Management System</value></data>
+  <data name="Login.Id" xml:space="preserve"><value>Login ID</value></data>
+  <data name="Login.Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Login.DemoHint" xml:space="preserve"><value>Demo account: ID admin / Password admin123</value></data>
+</root>

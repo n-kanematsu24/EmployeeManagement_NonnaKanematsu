@@ -1,0 +1,198 @@
+@model EmployeeViewModel
+@{
+    ViewData["Title"] = "社員登録";
+}
+
+@section Breadcrumb {
+  <div class="breadcrumb">
+    <div class="page-icon">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    </div>
+    <a class="bc-link" asp-controller="Employee" asp-action="Index">社員一覧</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-current">社員登録</span>
+  </div>
+}
+
+<style>
+.upload-zone{border:2px dashed var(--border);border-radius:50%;width:140px;height:140px;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:#f0f4fb}
+.upload-zone img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:50%;display:none}
+.section-title{font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.field-hint{font-size:11px;color:var(--text-soft);margin-top:4px}
+</style>
+
+<div class="fade-up">
+  <form asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start">
+
+      <!-- 左カラム：画像アップロード -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:8px">
+        <div class="upload-zone" id="uploadZone"
+             ondragover="event.preventDefault();this.classList.add('drag')"
+             ondragleave="this.classList.remove('drag')"
+             ondrop="handleDrop(event)"
+             onclick="document.getElementById('imgInput').click()">
+          <img id="imgPreview" src="" alt="">
+          <svg id="uploadIcon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span id="uploadLabel" style="font-size:11px;color:var(--text-soft);text-align:center;line-height:1.6">クリックして<br>画像を追加</span>
+        </div>
+        <input type="file" id="imgInput" asp-for="ProfileImageFile" accept="image/*" style="display:none" onchange="previewImg(this)">
+        <p style="font-size:11px;color:var(--text-soft);text-align:center">プロフィール画像<br><span style="font-size:10px;opacity:.7">JPG・PNG・GIF・WEBP</span></p>
+
+        <!-- ライブプレビュー -->
+        <div style="width:100%;padding:12px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);text-align:center;margin-top:4px">
+          <div id="liveName" style="font-weight:600;font-size:13px;color:var(--text-soft)">氏名を入力</div>
+          <div id="liveNo" style="font-family:var(--mono);font-size:11px;color:var(--text-soft);margin-top:2px">—</div>
+        </div>
+      </div>
+
+      <!-- 右カラム：フォーム -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          社員情報の登録
+        </div>
+        <div class="form-body">
+
+          <!-- セクション1: 基本情報 -->
+          <div class="section-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            基本情報
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" asp-for="EmployeeNo">社員番号</label>
+            <input asp-for="EmployeeNo" class="form-control" placeholder="例）EMP001"
+                   style="font-family:var(--mono)" oninput="updateLive()">
+            <div class="field-hint">未入力の場合は後から設定できます</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">氏名<span class="req">*</span></label>
+            <div class="form-row">
+              <div>
+                <input asp-for="LastName" class="form-control" placeholder="例）山田" oninput="updateLive()">
+                <span asp-validation-for="LastName" class="field-validation-error"></span>
+              </div>
+              <div>
+                <input asp-for="FirstName" class="form-control" placeholder="例）太郎" oninput="updateLive()">
+                <span asp-validation-for="FirstName" class="field-validation-error"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" asp-for="BirthDate">生年月日<span class="req">*</span></label>
+              <input asp-for="BirthDate" type="date" class="form-control" value="">
+              <span asp-validation-for="BirthDate" class="field-validation-error"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" asp-for="HireDate">入社日</label>
+              <input asp-for="HireDate" type="date" class="form-control">
+            </div>
+          </div>
+
+          <!-- セクション2: 連絡先 -->
+          <div class="section-title" style="margin-top:8px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            連絡先
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" asp-for="Email">メールアドレス<span class="req">*</span></label>
+            <input asp-for="Email" type="email" class="form-control" placeholder="x-xxxxxx@example.com">
+            <span asp-validation-for="Email" class="field-validation-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" asp-for="Phone">電話番号<span class="req">*</span></label>
+            <input asp-for="Phone" class="form-control" placeholder="000-0000-0000" style="font-family:var(--mono)">
+            <span asp-validation-for="Phone" class="field-validation-error"></span>
+          </div>
+
+          <!-- セクション3: 所属・状態 -->
+          <div class="section-title" style="margin-top:8px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            所属・状態
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" asp-for="DeptId">部門<span class="req">*</span></label>
+              <select asp-for="DeptId" asp-items="ViewBag.Departments" class="form-control">
+                <option value="">選択してください</option>
+              </select>
+              <span asp-validation-for="DeptId" class="field-validation-error"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" asp-for="Status">在籍状態<span class="req">*</span></label>
+              <select asp-for="Status" class="form-control">
+                <option value="">選択してください</option>
+                <option value="1">在籍</option>
+                <option value="2">休職</option>
+                <option value="3">退職</option>
+              </select>
+              <span asp-validation-for="Status" class="field-validation-error"></span>
+            </div>
+          </div>
+
+          <div class="form-footer" style="margin:8px -28px -28px;padding:16px 28px">
+            <a class="btn btn-secondary" asp-controller="Employee" asp-action="Index">キャンセル</a>
+            <button type="submit" class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              登録する
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+@section Scripts {
+<script>
+function updateLive() {
+  const last = document.querySelector('[name="LastName"]').value;
+  const first = document.querySelector('[name="FirstName"]').value;
+  const no = document.querySelector('[name="EmployeeNo"]').value;
+  const nm = document.getElementById('liveName');
+  const lno = document.getElementById('liveNo');
+  const full = (last + ' ' + first).trim();
+  nm.textContent = full || '氏名を入力';
+  nm.style.color = full ? 'var(--text-dark)' : 'var(--text-soft)';
+  lno.textContent = no || '—';
+}
+function previewImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  showImagePreview(file);
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('imgInput').files = dt.files;
+    showImagePreview(file);
+  }
+}
+function showImagePreview(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('imgPreview');
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+    document.getElementById('uploadIcon').style.display = 'none';
+    document.getElementById('uploadLabel').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+</script>
+}

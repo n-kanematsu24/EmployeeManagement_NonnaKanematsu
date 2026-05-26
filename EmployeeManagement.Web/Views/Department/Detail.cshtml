@@ -1,0 +1,122 @@
+@model DepartmentViewModel
+@{
+    ViewData["Title"] = Model.DeptName + " — 詳細";
+}
+
+@section Breadcrumb {
+  <div class="breadcrumb">
+    <div class="page-icon">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    </div>
+    <a class="bc-link" asp-controller="Department" asp-action="Index">部門一覧</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-current">@Model.DeptName</span>
+  </div>
+}
+
+<div class="fade-up" style="max-width:760px">
+  <div class="card" style="margin-bottom:20px;padding:24px">
+    <div style="display:flex;align-items:center;gap:20px">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;flex-shrink:0">
+        @(Model.DeptName.FirstOrDefault().ToString())
+      </div>
+      <div style="flex:1">
+        <div style="font-size:22px;font-weight:700;margin-bottom:4px">@Model.DeptName</div>
+        <div style="font-family:var(--mono);color:var(--text-soft);font-size:13px">@Model.DeptCode</div>
+        @if (!string.IsNullOrEmpty(Model.Phone))
+        {
+          <div style="font-family:var(--mono);color:var(--text-mid);font-size:13px;margin-top:4px">📞 @Model.Phone</div>
+        }
+      </div>
+      <div style="display:flex;gap:10px">
+        <a class="btn btn-secondary btn-sm" asp-controller="Department" asp-action="Edit" asp-route-id="@Model.Id">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          編集
+        </a>
+        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          削除
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 基本情報 -->
+  <div class="card" style="margin-bottom:20px;overflow:hidden">
+    <div class="card-header"><span class="card-title">基本情報</span></div>
+    <div class="info-grid">
+      <div class="info-row">
+        <div class="info-label">部門ID</div>
+        <div class="info-value" style="font-family:var(--mono)">@Model.Id</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">部門コード</div>
+        <div class="info-value" style="font-family:var(--mono)">@Model.DeptCode</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">部門名</div>
+        <div class="info-value">@Model.DeptName</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label">電話番号</div>
+        <div class="info-value" style="font-family:var(--mono)">@(Model.Phone ?? "—")</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- メンバー -->
+  <div class="card" style="overflow:hidden">
+    <div class="card-header">
+      <span class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        メンバー
+      </span>
+      <span style="font-size:12px;color:var(--text-soft)">@Model.Members.Count 名</span>
+    </div>
+    <div style="padding:20px">
+      @if (Model.Members.Any())
+      {
+        <div class="members-grid">
+          @foreach (var member in Model.Members)
+          {
+            <a class="member-chip" asp-controller="Employee" asp-action="Detail" asp-route-id="@member.Id">
+              <div class="member-av">@(member.LastName?.FirstOrDefault().ToString() ?? "?")</div>
+              <span style="font-size:13px;font-weight:500">@member.FullName</span>
+            </a>
+          }
+        </div>
+      }
+      else
+      {
+        <div class="empty-state" style="padding:30px 0"><div>メンバーがいません</div></div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- 削除モーダル -->
+<div id="deleteModal"
+     style="position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);z-index:500;display:none;align-items:center;justify-content:center"
+     onclick="if(event.target===this)hideDeleteModal()">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+    <div style="font-size:16px;font-weight:700;margin-bottom:12px">⚠️ 削除の確認</div>
+    <div style="font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:24px">
+      <strong>@Model.DeptName（@Model.DeptCode）</strong> を削除しますか？<br>この操作は取り消せません。
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px">
+      <button type="button" class="btn btn-secondary" onclick="hideDeleteModal()">キャンセル</button>
+      <form asp-controller="Department" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="margin:0">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">削除する</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+<script>
+function showDeleteModal(){document.getElementById('deleteModal').style.display='flex'}
+function hideDeleteModal(){document.getElementById('deleteModal').style.display='none'}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideDeleteModal()});
+</script>
+}
