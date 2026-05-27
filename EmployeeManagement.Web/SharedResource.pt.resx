@@ -67,4 +67,15 @@
   <data name="Login.Id" xml:space="preserve"><value>ID de Usuário</value></data>
   <data name="Login.Password" xml:space="preserve"><value>Senha</value></data>
   <data name="Login.DemoHint" xml:space="preserve"><value>Conta demo: ID admin / Senha admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>Nome em inglês (opcional)</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>Recente</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>N° ↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>N° ↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>Informações do Sistema</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>Somente leitura</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>Atualizado por</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>Data de registro</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>Data de atualização</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>Administrador do Sistema</value></data>
 </root>

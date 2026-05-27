@@ -67,4 +67,15 @@
   <data name="Login.Id" xml:space="preserve"><value>ID Đăng Nhập</value></data>
   <data name="Login.Password" xml:space="preserve"><value>Mật Khẩu</value></data>
   <data name="Login.DemoHint" xml:space="preserve"><value>Tài khoản demo: ID admin / Mật khẩu admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>Tên tiếng Anh (tùy chọn)</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>Mới nhất</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>Số↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>Số↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>Tổng</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>Thông Tin Hệ Thống</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>Chỉ đọc</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>Người cập nhật cuối</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>Ngày tạo</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>Ngày cập nhật</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>Quản trị viên hệ thống</value></data>
 </root>

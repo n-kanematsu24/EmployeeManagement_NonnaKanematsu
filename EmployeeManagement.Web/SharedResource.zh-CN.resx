@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+  <data name="System.Title" xml:space="preserve"><value>员工信息管理系统</value></data>
+  <data name="System.SubTitle" xml:space="preserve"><value>Employee Management System</value></data>
+  <data name="Nav.EmployeeList" xml:space="preserve"><value>员工列表</value></data>
+  <data name="Nav.EmployeeAdd" xml:space="preserve"><value>添加员工</value></data>
+  <data name="Nav.DepartmentList" xml:space="preserve"><value>部门列表</value></data>
+  <data name="Nav.DepartmentAdd" xml:space="preserve"><value>添加部门</value></data>
+  <data name="Nav.Logout" xml:space="preserve"><value>退出登录</value></data>
+  <data name="Nav.LogoutConfirm" xml:space="preserve"><value>确定要退出登录吗？</value></data>
+  <data name="Label.EmployeeNo" xml:space="preserve"><value>员工编号</value></data>
+  <data name="Label.LastName" xml:space="preserve"><value>姓</value></data>
+  <data name="Label.FirstName" xml:space="preserve"><value>名</value></data>
+  <data name="Label.FullName" xml:space="preserve"><value>姓名</value></data>
+  <data name="Label.Email" xml:space="preserve"><value>电子邮件</value></data>
+  <data name="Label.Phone" xml:space="preserve"><value>电话号码</value></data>
+  <data name="Label.Department" xml:space="preserve"><value>部门</value></data>
+  <data name="Label.Status" xml:space="preserve"><value>在职状态</value></data>
+  <data name="Label.HireDate" xml:space="preserve"><value>入职日期</value></data>
+  <data name="Label.BirthDate" xml:space="preserve"><value>出生日期</value></data>
+  <data name="Label.DeptCode" xml:space="preserve"><value>部门代码</value></data>
+  <data name="Label.DeptName" xml:space="preserve"><value>部门名称</value></data>
+  <data name="Label.ProfileImage" xml:space="preserve"><value>个人头像</value></data>
+  <data name="Label.DeptImage" xml:space="preserve"><value>部门图片</value></data>
+  <data name="Label.BasicInfo" xml:space="preserve"><value>基本信息</value></data>
+  <data name="Label.Contact" xml:space="preserve"><value>联系方式</value></data>
+  <data name="Label.Affiliation" xml:space="preserve"><value>所属・状态</value></data>
+  <data name="Label.Members" xml:space="preserve"><value>成员</value></data>
+  <data name="Label.Preview" xml:space="preserve"><value>预览</value></data>
+  <data name="Status.Active" xml:space="preserve"><value>在职</value></data>
+  <data name="Status.Leave" xml:space="preserve"><value>休假</value></data>
+  <data name="Status.Resigned" xml:space="preserve"><value>离职</value></data>
+  <data name="Status.Unknown" xml:space="preserve"><value>未知</value></data>
+  <data name="Btn.Register" xml:space="preserve"><value>注册</value></data>
+  <data name="Btn.Update" xml:space="preserve"><value>更新</value></data>
+  <data name="Btn.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Btn.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Btn.Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Btn.Search" xml:space="preserve"><value>搜索</value></data>
+  <data name="Btn.Logout" xml:space="preserve"><value>退出</value></data>
+  <data name="Btn.Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Page.EmployeeList" xml:space="preserve"><value>员工列表</value></data>
+  <data name="Page.EmployeeCreate" xml:space="preserve"><value>员工注册</value></data>
+  <data name="Page.EmployeeEdit" xml:space="preserve"><value>编辑员工</value></data>
+  <data name="Page.EmployeeDetail" xml:space="preserve"><value>员工详情</value></data>
+  <data name="Page.DeptList" xml:space="preserve"><value>部门列表</value></data>
+  <data name="Page.DeptCreate" xml:space="preserve"><value>添加部门</value></data>
+  <data name="Page.DeptEdit" xml:space="preserve"><value>编辑部门</value></data>
+  <data name="Page.DeptDetail" xml:space="preserve"><value>部门详情</value></data>
+  <data name="Page.Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Msg.NoMembers" xml:space="preserve"><value>暂无成员</value></data>
+  <data name="Msg.NoData" xml:space="preserve"><value>未找到数据</value></data>
+  <data name="Msg.DeleteConfirm" xml:space="preserve"><value>此操作无法撤销。</value></data>
+  <data name="Msg.AutoCode" xml:space="preserve"><value>注册后将自动生成 DEPT001 格式的代码。</value></data>
+  <data name="Msg.ReadOnly" xml:space="preserve"><value>自动生成，不可更改</value></data>
+  <data name="Msg.ImageDrop" xml:space="preserve"><value>点击或拖拽上传</value></data>
+  <data name="Hint.Select" xml:space="preserve"><value>请选择</value></data>
+  <data name="Hint.SearchEmployee" xml:space="preserve"><value>按姓名・编号・邮件搜索</value></data>
+  <data name="Hint.SearchDept" xml:space="preserve"><value>按部门名・ID搜索</value></data>
+  <data name="Confirm.DeleteEmployee" xml:space="preserve"><value>确定要删除吗？</value></data>
+  <data name="Confirm.DeleteDept" xml:space="preserve"><value>确定要删除吗？</value></data>
+  <data name="Footer.Copyright" xml:space="preserve"><value>2026 Employee Management System</value></data>
+  <data name="Login.Id" xml:space="preserve"><value>登录ID</value></data>
+  <data name="Login.Password" xml:space="preserve"><value>密码</value></data>
+  <data name="Login.DemoHint" xml:space="preserve"><value>演示账号：ID admin / 密码 admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>英文名称（选填）</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>最新顺序</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>编号↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>编号↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>共</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>系统信息</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>不可修改</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>最后修改者</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>登记时间</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>更新时间</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>系统管理员</value></data>
+</root>

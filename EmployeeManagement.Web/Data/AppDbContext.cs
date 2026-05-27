@@ -12,11 +12,13 @@ namespace EmployeeManagement.Web.Data
 
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Department> Departments => Set<Department>();
+        public DbSet<Login> Logins => Set<Login>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().ToTable("employee");
             modelBuilder.Entity<Department>().ToTable("department");
+            modelBuilder.Entity<Login>().ToTable("login");
         }
     }
 }

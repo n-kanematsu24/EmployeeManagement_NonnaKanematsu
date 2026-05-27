@@ -1,66 +1,126 @@
 @model List<DepartmentViewModel>
 @{
-    ViewData["Title"] = "部門一覧";
+    ViewData["Title"] = L["Page.DeptList"];
 }
 
-@section Breadcrumb {
-  <div class="page-icon">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-  </div>
-  <span class="page-title">部門一覧</span>
-}
+@if (ViewBag.IsMobile == true)
+{
+  <div class="m-fade-up">
+    <div class="m-search">
+      <svg class="m-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="m-search-input" id="mSearchInput" placeholder="@L["Hint.SearchDept"]" oninput="mFilter(this.value)">
+    </div>
+    <div class="m-count" style="display:flex;align-items:center;gap:10px">
+      <span>@L["Count.Total"] <span id="mCount">@Model.Count</span> 件</span>
+      <span style="color:#ddd">|</span>
+      <button onclick="mSort('updated')" class="mSortBtn active" data-sort="updated" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--accent);cursor:pointer;padding:0;font-weight:600">@L["Sort.Updated"]</button>
+      <button onclick="mSort('asc')" class="mSortBtn" data-sort="asc" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoAsc"]</button>
+      <button onclick="mSort('desc')" class="mSortBtn" data-sort="desc" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoDesc"]</button>
+    </div>
 
-<div class="fade-up">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-    <div class="search-wrap" style="flex:1;max-width:400px">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" class="search-input" id="searchInput" placeholder="部門名・IDで検索" oninput="filterTable(this.value)">
+    @if (!Model.Any())
+    {
+      <div style="text-align:center;padding:60px 0;color:var(--text-soft)">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;margin-bottom:12px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <div>@L["Msg.NoData"]</div>
+      </div>
+    }
+
+    <div id="mList">
+      @foreach (var dept in Model)
+      {
+        <div class="m-card" style="margin-bottom:10px"
+             data-name="@dept.LocalizedDeptName" data-id="@dept.Id"
+             data-index="@Model.IndexOf(dept)"
+             data-idval="@dept.Id">
+          <a class="m-list-item" href="@Url.Action("Detail","Department",new{id=dept.Id})" style="display:flex">
+            @if (!string.IsNullOrEmpty(dept.ImagePath))
+            { <img src="@dept.ImagePath" class="m-avatar m-avatar-sm" alt=""> }
+            else
+            { <div class="m-avatar m-avatar-sm" style="font-size:18px">@(dept.DeptName.FirstOrDefault().ToString())</div> }
+            <div class="m-list-body">
+              <div class="m-list-title">@dept.LocalizedDeptName</div>
+              <div class="m-list-sub" style="font-family:var(--mono)">@dept.DeptCode @(dept.Phone != null ? "· " + dept.Phone : "")</div>
+            </div>
+            <div class="m-list-right">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </a>
+        </div>
+      }
     </div>
   </div>
 
-  <div class="count-bar">全 <span id="countNum">@Model.Count</span> 件</div>
-
-  <div class="card" style="overflow:hidden">
-    <table class="data-table" id="deptTable">
-      <thead>
-        <tr>
-          <th>部門ID</th>
-          <th>部門名</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach (var dept in Model)
-        {
-          <tr onclick="location.href='@Url.Action("Detail","Department",new{id=dept.Id})'"
-              data-name="@dept.DeptName" data-id="@dept.Id">
-            <td><span style="font-family:var(--mono);font-weight:500">@dept.DeptCode</span></td>
-            <td>@dept.DeptName</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-    @if (!Model.Any())
-    {
-      <div class="empty-state">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        <div style="margin-top:8px">部門が登録されていません</div>
-      </div>
-    }
-  </div>
-</div>
-
-@section Scripts {
-<script>
-function filterTable(q) {
-  q = q.toLowerCase();
-  const rows = document.querySelectorAll('#deptTable tbody tr');
-  let count = 0;
-  rows.forEach(r => {
-    const show = !q || r.dataset.name.toLowerCase().includes(q) || String(r.dataset.id).includes(q);
-    r.style.display = show ? '' : 'none';
-    if (show) count++;
-  });
-  document.getElementById('countNum').textContent = count;
+  @section Scripts {
+  <script>
+  function mFilter(q){
+    q=q.toLowerCase();
+    let count=0;
+    document.querySelectorAll('#mList .m-card').forEach(r=>{
+      const show=!q||r.dataset.name.toLowerCase().includes(q)||String(r.dataset.id).includes(q);
+      r.style.display=show?'':'none';
+      if(show)count++;
+    });
+    document.getElementById('mCount').textContent=count;
+  }
+  </script>
+  }
 }
-</script>
+else
+{
+@section Breadcrumb {
+  <div class="page-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+  <span class="page-title">@L["Page.DeptList"]</span>
+}
+  <div class="fade-up">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div class="search-wrap" style="flex:1;max-width:400px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="@L["Hint.SearchDept"]" oninput="filterTable(this.value)">
+      </div>
+    </div>
+    <div class="count-bar" style="display:flex;align-items:center;gap:12px">
+      <span>@L["Count.Total"] <span id="countNum">@Model.Count</span> 件</span>
+      <span style="color:var(--border)">|</span>
+      <span style="display:flex;align-items:center;gap:8px">
+        <button class="sortBtn active" data-sort="updated" onclick="sortTable('updated')" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--accent);cursor:pointer;padding:0;font-weight:600">@L["Sort.Updated"]</button>
+        <button class="sortBtn" data-sort="asc" onclick="sortTable('asc')" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoAsc"]</button>
+        <button class="sortBtn" data-sort="desc" onclick="sortTable('desc')" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoDesc"]</button>
+      </span>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <table class="data-table" id="deptTable">
+        <thead><tr><th>@L["Label.DeptCode"]</th><th>@L["Label.DeptName"]</th><th>@L["Label.Phone"]</th></tr></thead>
+        <tbody>
+          @foreach (var dept in Model)
+          {
+            <tr onclick="location.href='@Url.Action("Detail","Department",new{id=dept.Id})'"
+                data-name="@dept.LocalizedDeptName" data-id="@dept.Id"
+                data-index="@Model.IndexOf(dept)"
+                data-idval="@dept.Id">
+              <td><div style="display:flex;align-items:center;gap:10px">@if(!string.IsNullOrEmpty(dept.ImagePath)){<img src="@dept.ImagePath" style="width:28px;height:28px;border-radius:50%;object-fit:cover" alt="">}else{<div style="width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">@(dept.DeptName.FirstOrDefault().ToString())</div>}<span style="font-family:var(--mono);font-weight:500">@dept.DeptCode</span></div></td>
+              <td><div>@dept.LocalizedDeptName</div>@if(dept.LocalizedDeptName!=dept.DeptName&&!string.IsNullOrEmpty(dept.DeptName)){<div style="font-size:11px;color:var(--text-soft)">@dept.DeptName</div>}</td>
+              <td><span style="font-family:var(--mono);font-size:13px">@(dept.Phone ?? "—")</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      { <div class="empty-state"><div>@L["Msg.NoData"]</div></div> }
+    </div>
+  </div>
+  @section Scripts {<script>
+  function filterTable(q){q=q.toLowerCase();let c=0;document.querySelectorAll('#deptTable tbody tr').forEach(r=>{const s=!q||r.dataset.name.toLowerCase().includes(q)||String(r.dataset.id).includes(q);r.style.display=s?'':'none';if(s)c++});document.getElementById('countNum').textContent=c}
+  function sortTable(type){
+    document.querySelectorAll('.sortBtn').forEach(b=>{const a=b.dataset.sort===type;b.style.color=a?'var(--accent)':' var(--text-soft)';b.style.fontWeight=a?'600':'400'});
+    const tbody=document.querySelector('#deptTable tbody');
+    const rows=[...tbody.querySelectorAll('tr')];
+    rows.sort((a,b)=>{
+      if(type==='updated')return parseInt(a.dataset.index)-parseInt(b.dataset.index);
+      const an=parseInt(a.dataset.idval)||0,bn=parseInt(b.dataset.idval)||0;
+      return type==='asc'?an-bn:bn-an;
+    });
+    rows.forEach(r=>tbody.appendChild(r));
+  }
+  </script>}
 }

@@ -67,4 +67,15 @@
   <data name="Login.Id" xml:space="preserve"><value>로그인 ID</value></data>
   <data name="Login.Password" xml:space="preserve"><value>비밀번호</value></data>
   <data name="Login.DemoHint" xml:space="preserve"><value>데모 계정: ID admin / 비밀번호 admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>영어 이름（선택）</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>최신순</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>번호↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>번호↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>전체</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>시스템 정보</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>변경 불가</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>최종 수정자</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>등록 일시</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>수정 일시</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>시스템 관리자</value></data>
 </root>

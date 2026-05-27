@@ -19,6 +19,12 @@ namespace EmployeeManagement.Web.Models
         [Column("first_name")]
         public string? FirstName { get; set; }
 
+        [Column("last_name_en")]
+        public string? LastNameEn { get; set; }
+
+        [Column("first_name_en")]
+        public string? FirstNameEn { get; set; }
+
         [Column("birth_date")]
         public DateOnly? BirthDate { get; set; }
 

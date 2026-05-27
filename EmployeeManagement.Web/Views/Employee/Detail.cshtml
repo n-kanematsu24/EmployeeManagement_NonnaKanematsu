@@ -1,130 +1,269 @@
 @model EmployeeViewModel
 @{
-    ViewData["Title"] = Model.FullName + " — 詳細";
+    ViewData["Title"] = Model.LocalizedFullName;
 }
 
-@section Breadcrumb {
-  <div class="breadcrumb">
-    <div class="page-icon">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-    </div>
-    <a class="bc-link" asp-controller="Employee" asp-action="Index">社員一覧</a>
-    <span class="bc-sep">›</span>
-    <span class="bc-current">@Model.FullName</span>
-  </div>
-}
-
-<div class="fade-up" style="max-width:760px">
-  <div class="card" style="margin-bottom:20px;padding:24px">
-    <div style="display:flex;align-items:center;gap:20px">
-      <!-- プロフィール画像 -->
-      <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border)">
+@if (ViewBag.IsMobile == true)
+{
+  <div class="m-fade-up">
+    <!-- プロフィールカード -->
+    <div class="m-card" style="margin-bottom:12px">
+      <div style="padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
         @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
-        {
-          <img src="@Model.ProfileImagePath" style="width:100%;height:100%;object-fit:cover" alt="@Model.FullName">
-        }
+        { <img src="@Model.ProfileImagePath" class="m-avatar m-avatar-xl" alt=""> }
         else
-        {
-          <div style="width:100%;height:100%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700">
-            @(Model.LastName?.FirstOrDefault().ToString() ?? "?")
-          </div>
-        }
-      </div>
-      <div style="flex:1">
-        <div style="font-size:22px;font-weight:700;margin-bottom:4px">@Model.FullName</div>
-        <div style="font-family:var(--mono);color:var(--text-soft);font-size:13px">@Model.EmployeeNo</div>
-        @if (!string.IsNullOrEmpty(Model.DeptName))
+        { <div class="m-avatar m-avatar-xl">@(Model.LastName?.FirstOrDefault().ToString() ?? "?")</div> }
+        <div>
+          <div style="font-size:20px;font-weight:700">@Model.LocalizedFullName</div>
+          @if (Model.LocalizedFullName != Model.FullName)
+          { <div style="font-size:14px;color:var(--text-mid)">@Model.FullName</div> }
+          <div style="font-family:var(--mono);font-size:13px;color:var(--text-soft);margin-top:4px">@Model.EmployeeNo</div>
+        </div>
+        <span class="m-badge" style="background:@Model.StatusBg;color:@Model.StatusColor">
+          <span class="m-badge-dot" style="background:@Model.StatusColor"></span>
+          @L[$"Status.{Model.StatusCode}"]
+        </span>
+        @if (!string.IsNullOrEmpty(Model.LocalizedDeptName))
         {
           <a asp-controller="Department" asp-action="Detail" asp-route-id="@Model.DeptId"
-             style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;background:#eef3fb;color:var(--accent);border-radius:999px;font-size:12px;font-weight:500;text-decoration:none">
-            @Model.DeptName
+             style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent-light);color:var(--accent);border-radius:20px;font-size:14px;font-weight:500;text-decoration:none">
+            @Model.LocalizedDeptName
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
         }
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="status-badge" style="background:@Model.StatusBg;color:@Model.StatusColor">
-          <span class="status-dot" style="background:@Model.StatusColor"></span>
-          @Model.StatusText
-        </span>
-        <a class="btn btn-secondary btn-sm" asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.Id">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-          編集
-        </a>
-        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-          削除
-        </button>
-      </div>
     </div>
-  </div>
 
-  <div class="card" style="overflow:hidden">
-    <div class="card-header"><span class="card-title">基本情報</span></div>
-    <div class="info-grid">
-      <div class="info-row">
-        <div class="info-label">社員番号</div>
-        <div class="info-value" style="font-family:var(--mono)">@Model.EmployeeNo</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">氏名</div>
-        <div class="info-value">@Model.FullName</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">部門</div>
-        <div class="info-value">@Model.DeptName</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">入社日</div>
-        <div class="info-value">@(Model.HireDate?.ToString("yyyy/MM/dd") ?? "—")</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">生年月日</div>
-        <div class="info-value">@((Model.BirthDate.HasValue && Model.BirthDate != DateOnly.MinValue) ? Model.BirthDate.Value.ToString("yyyy/MM/dd") : "—")</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">メールアドレス</div>
-        <div class="info-value" style="font-family:var(--mono);font-size:13px">@Model.Email</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">電話番号</div>
-        <div class="info-value" style="font-family:var(--mono)">@Model.Phone</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">在籍状態</div>
-        <div class="info-value">
-          <span class="status-badge" style="background:@Model.StatusBg;color:@Model.StatusColor">
-            <span class="status-dot" style="background:@Model.StatusColor"></span>
-            @Model.StatusText
-          </span>
+    <!-- 基本情報 -->
+    <div class="m-section-title">@L["Label.BasicInfo"]</div>
+    <div class="m-card" style="margin-bottom:12px">
+      <div style="padding:0 16px">
+        <div class="m-detail-row">
+          <div class="m-detail-label">@L["Label.EmployeeNo"]</div>
+          <div class="m-detail-value" style="font-family:var(--mono)">@Model.EmployeeNo</div>
+        </div>
+        <div class="m-detail-row">
+          <div class="m-detail-label">@L["Label.HireDate"]</div>
+          <div class="m-detail-value">@(Model.HireDate?.ToString("yyyy/MM/dd") ?? "—")</div>
+        </div>
+        <div class="m-detail-row">
+          <div class="m-detail-label">@L["Label.BirthDate"]</div>
+          <div class="m-detail-value">@((Model.BirthDate.HasValue && Model.BirthDate != DateOnly.MinValue) ? Model.BirthDate.Value.ToString("yyyy/MM/dd") : "—")</div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- 削除モーダル -->
-<div id="deleteModal"
-     style="position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);z-index:500;display:none;align-items:center;justify-content:center"
-     onclick="if(event.target===this)hideDeleteModal()">
-  <div style="background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)">
-    <div style="font-size:16px;font-weight:700;margin-bottom:12px">⚠️ 削除の確認</div>
-    <div style="font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:24px">
-      <strong>@Model.FullName（@Model.EmployeeNo）</strong> を削除しますか？<br>この操作は取り消せません。
+    <!-- 連絡先 -->
+    <div class="m-section-title">@L["Label.Contact"]</div>
+    <div class="m-card" style="margin-bottom:24px">
+      <div style="padding:0 16px">
+        <div class="m-detail-row">
+          <div class="m-detail-label">@L["Label.Email"]</div>
+          <div class="m-detail-value" style="font-family:var(--mono);font-size:13px">@Model.Email</div>
+        </div>
+        <div class="m-detail-row">
+          <div class="m-detail-label">@L["Label.Phone"]</div>
+          <div class="m-detail-value" style="font-family:var(--mono)">@Model.Phone</div>
+        </div>
+      </div>
     </div>
-    <div style="display:flex;justify-content:flex-end;gap:10px">
-      <button type="button" class="btn btn-secondary" onclick="hideDeleteModal()">キャンセル</button>
-      <form asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="margin:0">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-danger">削除する</button>
-      </form>
+
+    <!-- アクションボタン -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button type="button" class="m-btn" style="background:#f0f4fb;color:var(--accent);border:1.5px solid #c8d8f0" onclick="shareEmployee()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        共有
+      </button>
+      <a class="m-btn m-btn-secondary" asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.Id">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+        @L["Btn.Edit"]
+      </a>
+      <button type="button" class="m-btn m-btn-danger" onclick="showMDeleteModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        @L["Btn.Delete"]
+      </button>
     </div>
   </div>
-</div>
 
-@section Scripts {
-<script>
-function showDeleteModal(){document.getElementById('deleteModal').style.display='flex'}
-function hideDeleteModal(){document.getElementById('deleteModal').style.display='none'}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')hideDeleteModal()});
-</script>
+  <!-- 削除モーダル -->
+  <div class="m-modal-overlay" id="mDeleteModal" onclick="if(event.target===this)hideMDeleteModal()">
+    <div class="m-modal-sheet">
+      <div class="m-modal-title">⚠️ @L["Btn.Delete"]</div>
+      <div class="m-modal-body">
+        <strong>@Model.LocalizedFullName</strong> @L["Confirm.DeleteEmployee"]<br>
+        <span style="font-size:13px;color:var(--text-soft)">@L["Msg.DeleteConfirm"]</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <form asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+          @Html.AntiForgeryToken()
+          <button type="submit" class="m-btn m-btn-danger">@L["Btn.Delete"]</button>
+        </form>
+        <button type="button" class="m-btn m-btn-secondary" onclick="hideMDeleteModal()">@L["Btn.Cancel"]</button>
+      </div>
+    </div>
+  </div>
+
+  @section Scripts {
+  <script>
+  function showMDeleteModal(){document.getElementById('mDeleteModal').classList.add('show')}
+  function hideMDeleteModal(){document.getElementById('mDeleteModal').classList.remove('show')}
+  async function shareEmployee(){
+    const name = '@Model.LocalizedFullName';
+    const no = '@Model.EmployeeNo';
+    const dept = '@Model.LocalizedDeptName';
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: name,
+          text: `${name}（${no}）\n${dept}`,
+          url: url
+        });
+      } catch(e) { if(e.name !== 'AbortError') copyToClipboard(url); }
+    } else {
+      copyToClipboard(url);
+    }
+  }
+  function copyToClipboard(text){
+    navigator.clipboard.writeText(text).then(()=>{
+      showCopiedToast();
+    }).catch(()=>{
+      const ta=document.createElement('textarea');
+      ta.value=text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopiedToast();
+    });
+  }
+  function showCopiedToast(){
+    const t=document.createElement('div');
+    t.className='m-toast-container';
+    t.innerHTML='<div class="m-toast">🔗 リンクをコピーしました</div>';
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(), 2500);
+  }
+  </script>
+  }
+}
+else
+{
+@section Breadcrumb {
+  <div class="breadcrumb">
+    <div class="page-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+    <a class="bc-link" asp-controller="Employee" asp-action="Index">@L["Page.EmployeeList"]</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-current">@Model.LocalizedFullName</span>
+  </div>
+}
+  <div class="fade-up" style="max-width:760px">
+    <div class="card" style="margin-bottom:20px;padding:24px">
+      <div style="display:flex;align-items:center;gap:20px">
+        <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border)">
+          @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+          { <img src="@Model.ProfileImagePath" style="width:100%;height:100%;object-fit:cover" alt=""> }
+          else
+          { <div style="width:100%;height:100%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700">@(Model.LastName?.FirstOrDefault().ToString() ?? "?")</div> }
+        </div>
+        <div style="flex:1">
+          <div style="font-size:22px;font-weight:700;margin-bottom:2px">@Model.LocalizedFullName</div>
+          @if (Model.LocalizedFullName != Model.FullName)
+          { <div style="font-size:14px;color:var(--text-soft);margin-bottom:2px">@Model.FullName</div> }
+          <div style="font-family:var(--mono);color:var(--text-soft);font-size:13px">@Model.EmployeeNo</div>
+          @if (!string.IsNullOrEmpty(Model.LocalizedDeptName))
+          {
+            <a asp-controller="Department" asp-action="Detail" asp-route-id="@Model.DeptId"
+               style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;background:#eef3fb;color:var(--accent);border-radius:999px;font-size:12px;font-weight:500;text-decoration:none">
+              @Model.LocalizedDeptName
+            </a>
+          }
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="status-badge" style="background:@Model.StatusBg;color:@Model.StatusColor">
+            <span class="status-dot" style="background:@Model.StatusColor"></span>
+            @L[$"Status.{Model.StatusCode}"]
+          </span>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="pcShare()" title="共有">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            共有
+          </button>
+          <a class="btn btn-secondary btn-sm" asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.Id">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+            @L["Btn.Edit"]
+          </a>
+          <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            @L["Btn.Delete"]
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <div class="card-header"><span class="card-title">@L["Label.BasicInfo"]</span></div>
+      <div class="info-grid">
+        <div class="info-row"><div class="info-label">@L["Label.EmployeeNo"]</div><div class="info-value" style="font-family:var(--mono)">@Model.EmployeeNo</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.FullName"]</div><div class="info-value">@Model.FullName @if(!string.IsNullOrEmpty(Model.FullNameEn)){<text><div style="font-size:12px;color:var(--text-soft)">@Model.FullNameEn</div></text>}</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.Department"]</div><div class="info-value">@Model.LocalizedDeptName</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.HireDate"]</div><div class="info-value">@(Model.HireDate?.ToString("yyyy/MM/dd") ?? "—")</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.BirthDate"]</div><div class="info-value">@((Model.BirthDate.HasValue && Model.BirthDate != DateOnly.MinValue) ? Model.BirthDate.Value.ToString("yyyy/MM/dd") : "—")</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.Email"]</div><div class="info-value" style="font-family:var(--mono);font-size:13px">@Model.Email</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.Phone"]</div><div class="info-value" style="font-family:var(--mono)">@Model.Phone</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.Status"]</div><div class="info-value"><span class="status-badge" style="background:@Model.StatusBg;color:@Model.StatusColor"><span class="status-dot" style="background:@Model.StatusColor"></span>@L[$"Status.{Model.StatusCode}"]</span></div></div>
+      </div>
+    </div>
+    <div class="card" style="overflow:hidden;margin-top:16px;background:#FAFAF8">
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
+        <span class="card-title">🕐 @L["Label.SystemInfo"]</span>
+        <span style="font-size:11px;color:var(--text-soft);background:#fff;padding:3px 10px;border-radius:12px;border:1px solid var(--border)">🔒 @L["Label.ReadOnly"]</span>
+      </div>
+      <div class="info-grid" style="pointer-events:none;user-select:text">
+        <div class="info-row"><div class="info-label">@L["Label.UpdatedBy"]</div><div class="info-value">@(string.IsNullOrEmpty(Model.UpdatedByName) ? L["Label.SystemAdmin"].Value : Model.UpdatedByName)</div></div>
+        <div class="info-row"><div class="info-label">@L["Label.UpdatedAt"]</div><div class="info-value" style="font-family:var(--mono);font-size:13px">@(Model.UpdatedAt?.ToString("yyyy/MM/dd HH:mm:ss") ?? "—")</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="deleteModal" style="position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);z-index:500;display:none;align-items:center;justify-content:center" onclick="if(event.target===this)hideDeleteModal()">
+    <div style="background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+      <div style="font-size:16px;font-weight:700;margin-bottom:12px">⚠️ @L["Btn.Delete"]</div>
+      <div style="font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:24px"><strong>@Model.LocalizedFullName</strong> @L["Confirm.DeleteEmployee"]<br><span style="font-size:12px;color:var(--text-soft)">@L["Msg.DeleteConfirm"]</span></div>
+      <div style="display:flex;justify-content:flex-end;gap:10px">
+        <button type="button" class="btn btn-secondary" onclick="hideDeleteModal()">@L["Btn.Cancel"]</button>
+        <form asp-controller="Employee" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="margin:0">
+          @Html.AntiForgeryToken()
+          <button type="submit" class="btn btn-danger">@L["Btn.Delete"]</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  @section Scripts {
+  <script>
+  function showDeleteModal(){document.getElementById('deleteModal').style.display='flex'}
+  function hideDeleteModal(){document.getElementById('deleteModal').style.display='none'}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')hideDeleteModal()});
+  async function pcShare(){
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: '@Model.LocalizedFullName', text: '@Model.LocalizedFullName（@Model.EmployeeNo）\n@Model.LocalizedDeptName', url });
+        return;
+      } catch(e) { if(e.name==='AbortError') return; }
+    }
+    copyUrlToClipboard(url);
+  }
+  function copyUrlToClipboard(url){
+    navigator.clipboard.writeText(url).then(()=>showPcToast()).catch(()=>{
+      const ta=document.createElement('textarea');
+      ta.value=url;document.body.appendChild(ta);
+      ta.select();document.execCommand('copy');
+      document.body.removeChild(ta);
+      showPcToast();
+    });
+  }
+  function showPcToast(){
+    const c=document.querySelector('.toast-container')||Object.assign(document.createElement('div'),{className:'toast-container'});
+    document.body.appendChild(c);
+    c.innerHTML='<div class="toast">🔗 URLをコピーしました</div>';
+    setTimeout(()=>c.remove(),3000);
+  }
+  </script>
+  }
 }

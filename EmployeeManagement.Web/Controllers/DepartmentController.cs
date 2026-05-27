@@ -45,6 +45,32 @@ namespace EmployeeManagement.Web.Controllers
             return null;
         }
 
+        private EmployeeViewModel ToEmpViewModel(Employee e) => new()
+        {
+            Id = e.Id,
+            EmployeeNo = e.EmployeeNo,
+            LastName = e.LastName ?? string.Empty,
+            FirstName = e.FirstName ?? string.Empty,
+            LastNameEn = e.LastNameEn,
+            FirstNameEn = e.FirstNameEn,
+            Email = e.Email ?? string.Empty,
+            Phone = e.Phone ?? string.Empty,
+            Status = e.Status ?? 0,
+            DeptId = e.DeptId ?? 0,
+            ProfileImagePath = GetEmpImagePath(e.Id)
+        };
+
+        private string? GetEmpImagePath(int empId)
+        {
+            var imgDir = Path.Combine(_env.WebRootPath, "img", "employees");
+            foreach (var ext in new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" })
+            {
+                var path = Path.Combine(imgDir, $"emp_{empId}{ext}");
+                if (System.IO.File.Exists(path)) return $"/img/employees/emp_{empId}{ext}";
+            }
+            return null;
+        }
+
         public async Task<IActionResult> Index()
         {
             if (!IsLoggedIn()) return RequireLogin();
@@ -53,6 +79,7 @@ namespace EmployeeManagement.Web.Controllers
             {
                 Id = d.Id,
                 DeptName = d.DeptName ?? string.Empty,
+                DeptNameEn = d.DeptNameEn,
                 Phone = d.Phone,
                 ImagePath = GetDeptImagePath(d.Id)
             }).ToList();
@@ -65,19 +92,28 @@ namespace EmployeeManagement.Web.Controllers
             var dept = await _deptRepo.GetByIdAsync(id);
             if (dept == null) return NotFound();
             var allEmps = await _empRepo.GetAllAsync();
-            var members = allEmps.Where(e => e.DeptId == id).Select(e => new EmployeeViewModel
-            {
-                Id = e.Id, EmployeeNo = e.EmployeeNo,
-                LastName = e.LastName ?? string.Empty, FirstName = e.FirstName ?? string.Empty,
-                Email = e.Email ?? string.Empty, Phone = e.Phone ?? string.Empty,
-                Status = e.Status ?? 0, DeptId = e.DeptId ?? 0
-            }).ToList();
+            var members = allEmps.Where(e => e.DeptId == id).Select(ToEmpViewModel).ToList();
             var vm = new DepartmentViewModel
             {
-                Id = dept.Id, DeptName = dept.DeptName ?? string.Empty,
-                Phone = dept.Phone, Members = members,
-                ImagePath = GetDeptImagePath(dept.Id)
+                Id = dept.Id,
+                DeptName = dept.DeptName ?? string.Empty,
+                DeptNameEn = dept.DeptNameEn,
+                Phone = dept.Phone,
+                Members = members,
+                ImagePath = GetDeptImagePath(dept.Id),
+                CreatedAt = dept.CreatedAt,
+                UpdatedAt = dept.UpdatedAt,
+                UpdatedId = dept.UpdatedId
             };
+            // 更新者名を解決
+            if (vm.UpdatedId.HasValue)
+            {
+                var updater = await _empRepo.GetByIdAsync(vm.UpdatedId.Value);
+                if (updater != null)
+                {
+                    vm.UpdatedByName = $"{updater.LastName} {updater.FirstName}".Trim();
+                }
+            }
             return View(vm);
         }
 
@@ -95,7 +131,14 @@ namespace EmployeeManagement.Web.Controllers
             if (!IsLoggedIn()) return RequireLogin();
             ModelState.Remove("ProfileImageFile");
             if (!ModelState.IsValid) return View(model);
-            var dept = new Department { DeptName = model.DeptName, Phone = model.Phone, IsDeleted = false };
+            var dept = new Department
+            {
+                DeptName = model.DeptName,
+                DeptNameEn = model.DeptNameEn,
+                Phone = model.Phone,
+                IsDeleted = false,
+                UpdatedId = HttpContext.Session.GetInt32("login_emp_id")
+            };
             await _deptRepo.AddAsync(dept);
             if (model.ProfileImageFile != null) await SaveDeptImage(model.ProfileImageFile, dept.Id);
             TempData["Success"] = $"「{model.DeptName}」を登録しました";
@@ -110,8 +153,11 @@ namespace EmployeeManagement.Web.Controllers
             if (dept == null) return NotFound();
             var vm = new DepartmentViewModel
             {
-                Id = dept.Id, DeptName = dept.DeptName ?? string.Empty,
-                Phone = dept.Phone, ImagePath = GetDeptImagePath(dept.Id)
+                Id = dept.Id,
+                DeptName = dept.DeptName ?? string.Empty,
+                DeptNameEn = dept.DeptNameEn,
+                Phone = dept.Phone,
+                ImagePath = GetDeptImagePath(dept.Id)
             };
             return View(vm);
         }
@@ -126,7 +172,9 @@ namespace EmployeeManagement.Web.Controllers
             var dept = await _deptRepo.GetByIdAsync(id);
             if (dept == null) return NotFound();
             dept.DeptName = model.DeptName;
+            dept.DeptNameEn = model.DeptNameEn;
             dept.Phone = model.Phone;
+            dept.UpdatedId = HttpContext.Session.GetInt32("login_emp_id");
             await _deptRepo.UpdateAsync(dept);
             if (model.ProfileImageFile != null) await SaveDeptImage(model.ProfileImageFile, id);
             TempData["Success"] = $"「{model.DeptName}」を更新しました";

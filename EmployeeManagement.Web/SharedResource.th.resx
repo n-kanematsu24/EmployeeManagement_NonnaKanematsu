@@ -67,4 +67,15 @@
   <data name="Login.Id" xml:space="preserve"><value>ID ผู้ใช้</value></data>
   <data name="Login.Password" xml:space="preserve"><value>รหัสผ่าน</value></data>
   <data name="Login.DemoHint" xml:space="preserve"><value>บัญชีสาธิต: ID admin / รหัสผ่าน admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>ชื่อภาษาอังกฤษ (ไม่บังคับ)</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>ล่าสุด</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>หมายเลข↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>หมายเลข↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>ทั้งหมด</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>ข้อมูลระบบ</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>อ่านอย่างเดียว</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>ผู้แก้ไขล่าสุด</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>วันที่ลงทะเบียน</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>วันที่อัปเดต</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>ผู้ดูแลระบบ</value></data>
 </root>

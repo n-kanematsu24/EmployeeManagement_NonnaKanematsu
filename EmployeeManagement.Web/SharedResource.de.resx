@@ -57,7 +57,7 @@
   <data name="Msg.DeleteConfirm" xml:space="preserve"><value>Diese Aktion kann nicht rückgängig gemacht werden.</value></data>
   <data name="Msg.AutoCode" xml:space="preserve"><value>Der Code wird nach der Registrierung automatisch generiert (Format DEPT001).</value></data>
   <data name="Msg.ReadOnly" xml:space="preserve"><value>Automatisch generiert, nicht änderbar</value></data>
-  <data name="Msg.ImageDrop" xml:space="preserve"><value>Klicken oder per Drag &amp; Drop</value></data>
+  <data name="Msg.ImageDrop" xml:space="preserve"><value>Klicken oder per Drag und Drop</value></data>
   <data name="Hint.Select" xml:space="preserve"><value>Bitte wählen...</value></data>
   <data name="Hint.SearchEmployee" xml:space="preserve"><value>Suche nach Name, ID oder E-Mail</value></data>
   <data name="Hint.SearchDept" xml:space="preserve"><value>Suche nach Name oder ID</value></data>
@@ -67,4 +67,15 @@
   <data name="Login.Id" xml:space="preserve"><value>Benutzername</value></data>
   <data name="Login.Password" xml:space="preserve"><value>Passwort</value></data>
   <data name="Login.DemoHint" xml:space="preserve"><value>Demo-Konto: ID admin / Passwort admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>Englischer Name (optional)</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>Neueste</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>Nr. ↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>Nr. ↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>Gesamt</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>Systeminformationen</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>Schreibgeschützt</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>Zuletzt aktualisiert von</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>Erstellt am</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>Aktualisiert am</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>Systemadministrator</value></data>
 </root>

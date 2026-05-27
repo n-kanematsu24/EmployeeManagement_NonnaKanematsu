@@ -1,95 +1,242 @@
 @model List<EmployeeViewModel>
 @{
-    ViewData["Title"] = "社員一覧";
+    ViewData["Title"] = L["Page.EmployeeList"];
 }
 
+@if (ViewBag.IsMobile == true)
+{
+  <div class="m-fade-up">
+    <div class="m-search">
+      <svg class="m-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="m-search-input" id="mSearchInput" placeholder="@L["Hint.SearchEmployee"]" oninput="mFilter(this.value)">
+    </div>
+
+    <!-- ステータスフィルター -->
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      @foreach (var (s, code) in new[]{("1","Active"),("2","Leave"),("3","Resigned")})
+      {
+        <button onclick="mFilterStatus('@s')" class="mStatusBtn" data-s="@s"
+                style="flex:1;padding:8px 4px;border:1.5px solid var(--border);border-radius:20px;font-family:var(--font);font-size:12px;font-weight:600;background:var(--white);cursor:pointer;color:var(--text-mid)">
+          @L[$"Status.{code}"]
+        </button>
+      }
+    </div>
+
+    <div class="m-count" style="display:flex;align-items:center;gap:10px">
+      <span>@L["Count.Total"] <span id="mCount">@Model.Count</span> 件</span>
+      <span style="color:#ddd">|</span>
+      <button onclick="mSort('updated')" class="mSortBtn active" data-sort="updated" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--accent);cursor:pointer;padding:0;font-weight:600">@L["Sort.Updated"]</button>
+      <button onclick="mSort('asc')" class="mSortBtn" data-sort="asc" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoAsc"]</button>
+      <button onclick="mSort('desc')" class="mSortBtn" data-sort="desc" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoDesc"]</button>
+    </div>
+
+    @if (!Model.Any())
+    {
+      <div style="text-align:center;padding:60px 0;color:var(--text-soft)">@L["Msg.NoData"]</div>
+    }
+
+    <div id="mList">
+      @foreach (var (emp, i) in Model.Select((e,i)=>(e,i)))
+      {
+        <div class="m-card" style="margin-bottom:10px"
+             data-name="@emp.LocalizedFullName"
+             data-no="@emp.EmployeeNo"
+             data-email="@emp.Email"
+             data-status="@emp.Status"
+             data-index="@i"
+             data-updated="@(emp.UpdatedAt?.Ticks ?? 0)"
+             data-noval="@(System.Text.RegularExpressions.Regex.Replace(emp.EmployeeNo ?? "0", @"[^0-9]", "") is string n && n != "" ? n : "0")">
+          <a class="m-list-item" href="@Url.Action("Detail","Employee",new{id=emp.Id})" style="display:flex">
+            @if (!string.IsNullOrEmpty(emp.ProfileImagePath))
+            { <img src="@emp.ProfileImagePath" class="m-avatar m-avatar-sm" alt=""> }
+            else
+            { <div class="m-avatar m-avatar-sm">@(emp.LastName?.FirstOrDefault().ToString() ?? "?")</div> }
+            <div class="m-list-body">
+              <div class="m-list-title">@emp.LocalizedFullName</div>
+              <div class="m-list-sub">@emp.LocalizedDeptName · <span style="font-family:var(--mono)">@emp.EmployeeNo</span></div>
+            </div>
+            <div class="m-list-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+              <span class="m-badge" style="background:@emp.StatusBg;color:@emp.StatusColor">
+                <span class="m-badge-dot" style="background:@emp.StatusColor"></span>
+                @L[$"Status.{emp.StatusCode}"]
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+
+  @section Scripts {
+  <script>
+  let mCurrentStatus='', mCurrentSort='updated';
+  function mFilter(q){
+    q=q.toLowerCase();
+    let count=0;
+    document.querySelectorAll('#mList .m-card').forEach(r=>{
+      const matchQ=!q||r.dataset.name.toLowerCase().includes(q)||(r.dataset.no||'').toLowerCase().includes(q)||(r.dataset.email||'').toLowerCase().includes(q);
+      const matchS=!mCurrentStatus||r.dataset.status===mCurrentStatus;
+      const show=matchQ&&matchS;
+      r.style.display=show?'':'none';
+      if(show)count++;
+    });
+    document.getElementById('mCount').textContent=count;
+  }
+  function mFilterStatus(s){
+    mCurrentStatus=mCurrentStatus===s?'':s;
+    document.querySelectorAll('.mStatusBtn').forEach(b=>{
+      const active=b.dataset.s===mCurrentStatus;
+      b.style.background=active?'var(--accent)':'var(--white)';
+      b.style.color=active?'#fff':'var(--text-mid)';
+      b.style.borderColor=active?'var(--accent)':'var(--border)';
+    });
+    mFilter(document.getElementById('mSearchInput').value);
+  }
+  function mSort(type){
+    mCurrentSort=type;
+    document.querySelectorAll('.mSortBtn').forEach(b=>{
+      const active=b.dataset.sort===type;
+      b.style.color=active?'var(--accent)':'var(--text-soft)';
+      b.style.fontWeight=active?'600':'400';
+    });
+    const list=document.getElementById('mList');
+    const cards=[...list.querySelectorAll('.m-card')];
+    cards.sort((a,b)=>{
+      if(type==='updated') return parseInt(a.dataset.index)-parseInt(b.dataset.index);
+      const an=parseInt(a.dataset.noval)||0, bn=parseInt(b.dataset.noval)||0;
+      return type==='asc'?an-bn:bn-an;
+    });
+    cards.forEach(c=>list.appendChild(c));
+  }
+  </script>
+  }
+}
+else
+{
 @section Breadcrumb {
   <div class="page-icon">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
   </div>
-  <span class="page-title">社員一覧</span>
+  <span class="page-title">@L["Page.EmployeeList"]</span>
 }
-
-<div class="fade-up">
-  <!-- 検索バー -->
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-    <div class="search-wrap" style="flex:1;max-width:400px">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" class="search-input" id="searchInput" placeholder="社員名・ID・メールで検索" oninput="filterTable(this.value)">
-    </div>
-    <select class="form-control" style="width:120px;padding:9px 32px 9px 12px" onchange="filterStatus(this.value)">
-      <option value="">全状態</option>
-      <option value="在籍">在籍</option>
-      <option value="休職">休職</option>
-      <option value="退職">退職</option>
-    </select>
-  </div>
-
-  <!-- カウント -->
-  <div class="count-bar">全 <span id="countNum">@Model.Count</span> 件</div>
-
-  <!-- テーブル -->
-  <div class="card" style="overflow:hidden">
-    <table class="data-table" id="empTable">
-      <thead>
-        <tr>
-          <th>社員番号</th>
-          <th>氏名</th>
-          <th>部門</th>
-          <th>メールアドレス</th>
-          <th>在籍状態</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach (var emp in Model)
-        {
-          <tr onclick="location.href='@Url.Action("Detail","Employee",new{id=emp.Id})'"
-              data-name="@emp.FullName" data-no="@emp.EmployeeNo" data-email="@emp.Email" data-status="@emp.StatusText">
-            <td><span style="font-family:var(--mono);font-weight:500">@emp.EmployeeNo</span></td>
-            <td>@emp.FullName</td>
-            <td>@emp.DeptName</td>
-            <td><span style="font-family:var(--mono);font-size:13px">@emp.Email</span></td>
-            <td>
-              <span class="status-badge" style="background:@emp.StatusBg;color:@emp.StatusColor">
-                <span class="status-dot" style="background:@emp.StatusColor"></span>
-                @emp.StatusText
-              </span>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-    @if (!Model.Any())
-    {
-      <div class="empty-state">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-        <div style="margin-top:8px">社員が登録されていません</div>
+  <div class="fade-up">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <!-- 検索 -->
+      <div class="search-wrap" style="flex:1;max-width:360px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="@L["Hint.SearchEmployee"]" oninput="filterTable(this.value)">
       </div>
-    }
-  </div>
-</div>
+      <!-- ステータスフィルター -->
+      <select class="form-control" style="width:130px;padding:9px 32px 9px 12px" onchange="filterStatus(this.value)">
+        <option value="">@L["Label.Status"]</option>
+        <option value="1">@L["Status.Active"]</option>
+        <option value="2">@L["Status.Leave"]</option>
+        <option value="3">@L["Status.Resigned"]</option>
+      </select>
 
-@section Scripts {
-<script>
-let statusFilter = '';
-function filterTable(q) {
-  q = q.toLowerCase();
-  const rows = document.querySelectorAll('#empTable tbody tr');
-  let count = 0;
-  rows.forEach(r => {
-    const matchQ = !q || r.dataset.name.toLowerCase().includes(q) ||
-      (r.dataset.no||'').toLowerCase().includes(q) ||
-      (r.dataset.email||'').toLowerCase().includes(q);
-    const matchS = !statusFilter || r.dataset.status === statusFilter;
-    const show = matchQ && matchS;
-    r.style.display = show ? '' : 'none';
-    if (show) count++;
-  });
-  document.getElementById('countNum').textContent = count;
-}
-function filterStatus(v) {
-  statusFilter = v;
-  filterTable(document.getElementById('searchInput').value);
-}
-</script>
+    </div>
+
+    <div class="count-bar" style="display:flex;align-items:center;gap:12px">
+      <span>@L["Count.Total"] <span id="countNum">@Model.Count</span> 件</span>
+      <span style="color:var(--border)">|</span>
+      <span style="display:flex;align-items:center;gap:8px">
+        <button class="sortBtn active" data-sort="updated" onclick="sortTable('updated')" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--accent);cursor:pointer;padding:0;font-weight:600">@L["Sort.Updated"]</button>
+        <button class="sortBtn" data-sort="asc" onclick="sortTable('asc')" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoAsc"]</button>
+        <button class="sortBtn" data-sort="desc" onclick="sortTable('desc')" style="background:none;border:none;font-family:var(--font);font-size:12px;color:var(--text-soft);cursor:pointer;padding:0">@L["Sort.NoDesc"]</button>
+      </span>
+    </div>
+
+    <div class="card" style="overflow:hidden">
+      <table class="data-table" id="empTable">
+        <thead>
+          <tr>
+            <th>@L["Label.EmployeeNo"]</th>
+            <th>@L["Label.FullName"]</th>
+            <th>@L["Label.Department"]</th>
+            <th>@L["Label.Email"]</th>
+            <th>@L["Label.Status"]</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var (emp, i) in Model.Select((e,i)=>(e,i)))
+          {
+            <tr onclick="location.href='@Url.Action("Detail","Employee",new{id=emp.Id})'"
+                data-name="@emp.LocalizedFullName"
+                data-no="@emp.EmployeeNo"
+                data-email="@emp.Email"
+                data-status="@emp.Status"
+                data-index="@i"
+                data-noval="@(System.Text.RegularExpressions.Regex.Replace(emp.EmployeeNo ?? "0", @"[^0-9]", "") is string n && n != "" ? n : "0")">
+              <td><span style="font-family:var(--mono);font-weight:500">@emp.EmployeeNo</span></td>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  @if (!string.IsNullOrEmpty(emp.ProfileImagePath))
+                  { <img src="@emp.ProfileImagePath" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0" alt=""> }
+                  else
+                  { <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">@(emp.LastName?.FirstOrDefault().ToString() ?? "?")</div> }
+                  <div>
+                    <div>@emp.LocalizedFullName</div>
+                    @if (emp.LocalizedFullName != emp.FullName)
+                    { <div style="font-size:11px;color:var(--text-soft)">@emp.FullName</div> }
+                  </div>
+                </div>
+              </td>
+              <td>@emp.LocalizedDeptName</td>
+              <td><span style="font-family:var(--mono);font-size:13px">@emp.Email</span></td>
+              <td>
+                <span class="status-badge" style="background:@emp.StatusBg;color:@emp.StatusColor">
+                  <span class="status-dot" style="background:@emp.StatusColor"></span>
+                  @L[$"Status.{emp.StatusCode}"]
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      { <div class="empty-state"><div>@L["Msg.NoData"]</div></div> }
+    </div>
+  </div>
+
+  @section Scripts {
+  <script>
+  let statusFilter='', currentSort='updated';
+
+  function filterTable(q){
+    q=q.toLowerCase();
+    let c=0;
+    document.querySelectorAll('#empTable tbody tr').forEach(r=>{
+      const s=(!q||r.dataset.name.toLowerCase().includes(q)||(r.dataset.no||'').toLowerCase().includes(q)||(r.dataset.email||'').toLowerCase().includes(q))&&(!statusFilter||r.dataset.status===statusFilter);
+      r.style.display=s?'':'none';
+      if(s)c++;
+    });
+    document.getElementById('countNum').textContent=c;
+  }
+
+  function filterStatus(v){
+    statusFilter=v;
+    filterTable(document.getElementById('searchInput').value);
+  }
+
+  function sortTable(type){
+    currentSort=type;
+    // ボタンスタイル更新
+    document.querySelectorAll('.sortBtn').forEach(b=>{
+      const active=b.dataset.sort===type;
+      b.style.color=active?'var(--accent)':'var(--text-soft)';
+      b.style.fontWeight=active?'600':'400';
+    });
+    // 行をソート
+    const tbody=document.querySelector('#empTable tbody');
+    const rows=[...tbody.querySelectorAll('tr')];
+    rows.sort((a,b)=>{
+      if(type==='updated') return parseInt(a.dataset.index)-parseInt(b.dataset.index);
+      const an=parseInt(a.dataset.noval)||0, bn=parseInt(b.dataset.noval)||0;
+      return type==='asc'?an-bn:bn-an;
+    });
+    rows.forEach(r=>tbody.appendChild(r));
+  }
+  </script>
+  }
 }

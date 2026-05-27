@@ -1,187 +1,139 @@
 @model DepartmentViewModel
 @{
-    ViewData["Title"] = Model.DeptName + " — 編集";
+    ViewData["Title"] = Model.DeptName + " — " + L["Page.DeptEdit"];
 }
 
+@if (ViewBag.IsMobile == true)
+{
+  <div class="m-fade-up">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+      @Html.AntiForgeryToken()
+
+      <!-- 画像 -->
+      <div class="m-card" style="margin-bottom:12px">
+        <div class="m-upload" onclick="document.getElementById('mImgInput').click()">
+          <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;position:relative">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            { <img src="@Model.ImagePath" alt="" style="width:100%;height:100%;object-fit:cover"> }
+            else
+            { <div class="m-avatar m-avatar-xl" style="font-size:36px">@(Model.DeptName.FirstOrDefault().ToString())</div> }
+            <img id="mImgPreview" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+          </div>
+          <div style="font-size:14px;font-weight:500;color:var(--text-mid)">@L["Label.DeptImage"]</div>
+          <div style="font-size:12px;color:var(--text-soft)">タップして変更</div>
+        </div>
+        <input type="file" id="mImgInput" asp-for="ProfileImageFile" accept="image/*" style="display:none" onchange="mPreviewImg(this)">
+      </div>
+
+      <!-- 基本情報 -->
+      <div class="m-section-title">@L["Label.BasicInfo"]</div>
+      <div class="m-card" style="margin-bottom:12px;padding:16px">
+        <div class="m-form-group">
+          <label class="m-form-label">@L["Label.DeptCode"]</label>
+          <input type="text" value="@Model.DeptCode" class="m-form-input" readonly style="background:#f0f0f0;color:var(--text-soft);font-family:var(--mono)">
+          <div class="m-form-hint">🔒 @L["Msg.ReadOnly"]</div>
+        </div>
+        <div class="m-form-group">
+          <label class="m-form-label">@L["Label.DeptName"] <span class="req" style="color:var(--danger)">*</span></label>
+          <input asp-for="DeptName" class="m-form-input">
+          <span asp-validation-for="DeptName" class="m-form-error"></span>
+        </div>
+        <div class="m-form-group">
+          <label class="m-form-label">@L["Label.DeptName"] <span class="en-badge">EN</span></label>
+          <input asp-for="DeptNameEn" class="m-form-input" placeholder="e.g. Sales Department">
+          <div class="m-form-hint">@L["Label.EnNameOptional"]</div>
+        </div>
+      </div>
+
+      <!-- 連絡先 -->
+      <div class="m-section-title">@L["Label.Contact"]</div>
+      <div class="m-card" style="margin-bottom:24px;padding:16px">
+        <div class="m-form-group">
+          <label class="m-form-label">@L["Label.Phone"]</label>
+          <input asp-for="Phone" class="m-form-input" placeholder="000-0000-0000" style="font-family:var(--mono)">
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button type="submit" class="m-btn m-btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          @L["Btn.Update"]
+        </button>
+        <a class="m-btn m-btn-secondary" asp-controller="Department" asp-action="Detail" asp-route-id="@Model.Id">@L["Btn.Cancel"]</a>
+      </div>
+    </form>
+  </div>
+
+  @section Scripts {
+  <script>
+  function mPreviewImg(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{document.getElementById('mImgPreview').src=e.target.result;document.getElementById('mImgPreview').style.display='block'};reader.readAsDataURL(file)}
+  </script>
+  }
+}
+else
+{
 @section Breadcrumb {
   <div class="breadcrumb">
-    <div class="page-icon">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-    </div>
-    <a class="bc-link" asp-controller="Department" asp-action="Index">部門一覧</a>
+    <div class="page-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+    <a class="bc-link" asp-controller="Department" asp-action="Index">@L["Page.DeptList"]</a>
     <span class="bc-sep">›</span>
     <a class="bc-link" asp-controller="Department" asp-action="Detail" asp-route-id="@Model.Id">@Model.DeptName</a>
     <span class="bc-sep">›</span>
-    <span class="bc-current">編集</span>
+    <span class="bc-current">@L["Page.DeptEdit"]</span>
   </div>
 }
-
-<style>
-.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;overflow:hidden}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:#f0f4fb}
-.upload-zone img{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-md);display:none}
-.section-title{font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.field-hint{font-size:11px;color:var(--text-soft);margin-top:4px}
-.char-counter{font-size:11px;color:var(--text-soft);text-align:right;margin-top:3px}
-.char-counter.warn{color:var(--danger)}
-</style>
-
+<style>.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;overflow:hidden}.upload-zone:hover{border-color:var(--accent);background:#f0f4fb}.upload-zone img{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius-md);display:none}.section-title{font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}.char-counter{font-size:11px;color:var(--text-soft);text-align:right;margin-top:3px}.char-counter.warn{color:var(--danger)}.en-badge{font-size:9px;background:#eef3fb;color:var(--accent);padding:1px 6px;border-radius:4px;font-weight:600}</style>
 <div class="fade-up">
   <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
-
-      <!-- 左カラム：画像 + プレビュー -->
       <div>
         <div class="form-card" style="margin-bottom:20px">
-          <div class="form-card-header">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            部門画像
-          </div>
+          <div class="form-card-header">@L["Label.DeptImage"]</div>
           <div style="padding:20px">
-            <div class="upload-zone" id="uploadZone"
-                 ondragover="event.preventDefault();this.classList.add('drag')"
-                 ondragleave="this.classList.remove('drag')"
-                 ondrop="handleDrop(event)"
-                 onclick="document.getElementById('imgInput').click()">
-              <img id="imgPreview" src="@(Model.ImagePath ?? "")" alt=""
-                   style="@(!string.IsNullOrEmpty(Model.ImagePath) ? "display:block" : "display:none")">
-              <div id="uploadPlaceholder" style="@(!string.IsNullOrEmpty(Model.ImagePath) ? "display:none" : "")">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:.2;margin-bottom:10px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <div style="font-size:13px;font-weight:500;color:var(--text-soft);margin-bottom:4px">クリックまたはドラッグ&ドロップ</div>
-                <div style="font-size:11px;color:var(--text-soft)">JPG, PNG, GIF, WEBP</div>
-              </div>
+            <div class="upload-zone" id="uploadZone" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)" onclick="document.getElementById('imgInput').click()">
+              <img id="imgPreview" src="@(Model.ImagePath ?? "")" alt="" style="@(!string.IsNullOrEmpty(Model.ImagePath) ? "display:block" : "display:none")">
+              <div id="uploadPlaceholder" style="@(!string.IsNullOrEmpty(Model.ImagePath) ? "display:none" : "")"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:.2;margin-bottom:10px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><div style="font-size:13px;font-weight:500;color:var(--text-soft)">@L["Msg.ImageDrop"]</div></div>
             </div>
             <input type="file" id="imgInput" asp-for="ProfileImageFile" accept="image/*" style="display:none" onchange="previewImg(this)">
           </div>
         </div>
-
-        <!-- プレビューカード -->
         <div class="form-card">
-          <div class="form-card-header">プレビュー</div>
+          <div class="form-card-header">@L["Label.Preview"]</div>
           <div style="padding:20px">
             <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg);border-radius:var(--radius-md)">
-              <div id="previewAvatar" style="width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0;overflow:hidden;transition:all .2s">
-                @if (!string.IsNullOrEmpty(Model.ImagePath))
-                {
-                  <img src="@Model.ImagePath" style="width:100%;height:100%;object-fit:cover" alt="">
-                }
-                else
-                {
-                  @(Model.DeptName.FirstOrDefault().ToString())
-                }
-              </div>
+              <div id="previewAvatar" style="width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0;overflow:hidden">@if(!string.IsNullOrEmpty(Model.ImagePath)){<img src="@Model.ImagePath" style="width:100%;height:100%;object-fit:cover" alt="">}else{@(Model.DeptName.FirstOrDefault().ToString())}</div>
               <div>
                 <div id="previewName" style="font-weight:600;font-size:15px">@Model.DeptName</div>
-                <div id="previewCode" style="font-family:var(--mono);font-size:12px;color:var(--text-soft)">@Model.DeptCode</div>
-                <div id="previewPhone" style="font-size:12px;color:var(--text-soft);margin-top:2px;@(string.IsNullOrEmpty(Model.Phone) ? "display:none" : "")">
-                  @if (!string.IsNullOrEmpty(Model.Phone)) { <text>📞 @Model.Phone</text> }
-                </div>
+                <div id="previewNameEn" style="font-size:12px;color:var(--text-soft);@(string.IsNullOrEmpty(Model.DeptNameEn)?"display:none":"")">@(Model.DeptNameEn??"")</div>
+                <div style="font-family:var(--mono);font-size:12px;color:var(--text-soft)">@Model.DeptCode</div>
+                <div id="previewPhone" style="font-size:12px;color:var(--text-soft);@(string.IsNullOrEmpty(Model.Phone)?"display:none":"")">@(Model.Phone!=null?"📞 "+Model.Phone:"")</div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- 右カラム：フォーム -->
       <div class="form-card">
-        <div class="form-card-header">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-          部門情報の編集
-        </div>
+        <div class="form-card-header">@L["Page.DeptEdit"]</div>
         <div class="form-body">
-
-          <div class="section-title">基本情報</div>
-
-          <div class="form-group">
-            <label class="form-label">部門コード</label>
-            <input type="text" value="@Model.DeptCode" class="form-control" readonly
-              style="background:#f7f7f5;color:var(--text-soft);cursor:not-allowed;font-family:var(--mono)">
-            <div class="field-hint">🔒 自動採番のため変更不可</div>
-          </div>
-
-          <div class="form-group" style="margin-top:16px">
-            <label class="form-label" asp-for="DeptName">部門名<span class="req">*</span></label>
-            <input asp-for="DeptName" class="form-control" maxlength="50"
-                   style="font-size:15px;padding:13px 16px"
-                   oninput="updatePreview(this)">
-            <div class="char-counter" id="nameCounter">@Model.DeptName.Length / 50</div>
-            <span asp-validation-for="DeptName" class="field-validation-error"></span>
-          </div>
-
-          <div class="section-title" style="margin-top:24px">連絡先</div>
-
-          <div class="form-group">
-            <label class="form-label" asp-for="Phone">電話番号</label>
-            <div style="position:relative">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-soft);pointer-events:none">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.5 11.36a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.08 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 7.96a16 16 0 0 0 6.29 6.29l1.85-1.85a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
-              <input asp-for="Phone" class="form-control" placeholder="000-0000-0000"
-                     style="font-family:var(--mono);padding-left:40px"
-                     oninput="updatePhonePreview(this.value)">
-            </div>
-          </div>
-
-          <div class="form-footer" style="margin:24px -28px -28px;padding:16px 28px">
-            <a class="btn btn-secondary" asp-controller="Department" asp-action="Detail" asp-route-id="@Model.Id">キャンセル</a>
-            <button type="submit" class="btn btn-primary">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              更新する
-            </button>
-          </div>
+          <div class="section-title">@L["Label.BasicInfo"]</div>
+          <div class="form-group"><label class="form-label">@L["Label.DeptCode"]</label><input type="text" value="@Model.DeptCode" class="form-control" readonly style="background:#f7f7f5;color:var(--text-soft);cursor:not-allowed;font-family:var(--mono)"><div style="font-size:11px;color:var(--text-soft);margin-top:4px">🔒 @L["Msg.ReadOnly"]</div></div>
+          <div class="form-group" style="margin-top:16px"><label class="form-label" asp-for="DeptName">@L["Label.DeptName"]<span class="req">*</span></label><input asp-for="DeptName" class="form-control" maxlength="50" style="font-size:15px;padding:13px 16px" oninput="updatePreview(this)"><div class="char-counter" id="nameCounter">@Model.DeptName.Length / 50</div><span asp-validation-for="DeptName" class="field-validation-error"></span></div>
+          <div class="form-group"><label class="form-label">@L["Label.DeptName"] <span class="en-badge">EN</span></label><input asp-for="DeptNameEn" class="form-control" placeholder="e.g. Sales Department" oninput="updatePreviewEn(this.value)"><div style="font-size:11px;color:var(--text-soft);margin-top:4px">@L["Label.EnNameOptional"]</div></div>
+          <div class="section-title" style="margin-top:16px">@L["Label.Contact"]</div>
+          <div class="form-group"><label class="form-label" asp-for="Phone">@L["Label.Phone"]</label><input asp-for="Phone" class="form-control" style="font-family:var(--mono)" oninput="updatePhonePreview(this.value)"></div>
+          <div class="form-footer" style="margin:24px -28px -28px;padding:16px 28px"><a class="btn btn-secondary" asp-controller="Department" asp-action="Detail" asp-route-id="@Model.Id">@L["Btn.Cancel"]</a><button type="submit" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>@L["Btn.Update"]</button></div>
         </div>
       </div>
-
     </div>
   </form>
 </div>
-
-@section Scripts {
-<script>
-function updatePreview(input) {
-  const val = input.value;
-  document.getElementById('nameCounter').textContent = val.length + ' / 50';
-  document.getElementById('nameCounter').classList.toggle('warn', val.length > 40);
-  const nm = document.getElementById('previewName');
-  const av = document.getElementById('previewAvatar');
-  nm.textContent = val.trim() || '@Model.DeptName';
-  if (val.trim() && !av.querySelector('img')) av.textContent = val.trim()[0];
-}
-function updatePhonePreview(val) {
-  const el = document.getElementById('previewPhone');
-  if (val.trim()) { el.textContent = '📞 ' + val; el.style.display = 'block'; }
-  else { el.style.display = 'none'; }
-}
-function previewImg(input) {
-  const file = input.files[0];
-  if (!file) return;
-  showImagePreview(file);
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.remove('drag');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) {
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    document.getElementById('imgInput').files = dt.files;
-    showImagePreview(file);
-  }
-}
-function showImagePreview(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    const prev = document.getElementById('imgPreview');
-    prev.src = e.target.result;
-    prev.style.display = 'block';
-    document.getElementById('uploadPlaceholder').style.display = 'none';
-    const av = document.getElementById('previewAvatar');
-    av.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
-  };
-  reader.readAsDataURL(file);
-}
-</script>
+@section Scripts {<script>
+function updatePreview(input){const val=input.value;document.getElementById('nameCounter').textContent=val.length+' / 50';document.getElementById('nameCounter').classList.toggle('warn',val.length>40);const nm=document.getElementById('previewName'),av=document.getElementById('previewAvatar');nm.textContent=val.trim()||'@Model.DeptName';if(val.trim()&&!av.querySelector('img'))av.textContent=val.trim()[0]}
+function updatePreviewEn(val){const el=document.getElementById('previewNameEn');if(val.trim()){el.textContent=val;el.style.display='block'}else el.style.display='none'}
+function updatePhonePreview(val){const el=document.getElementById('previewPhone');if(val.trim()){el.textContent='📞 '+val;el.style.display='block'}else el.style.display='none'}
+function previewImg(input){const file=input.files[0];if(!file)return;showImagePreview(file)}
+function handleDrop(e){e.preventDefault();document.getElementById('uploadZone').classList.remove('drag');const file=e.dataTransfer.files[0];if(file&&file.type.startsWith('image/')){const dt=new DataTransfer();dt.items.add(file);document.getElementById('imgInput').files=dt.files;showImagePreview(file)}}
+function showImagePreview(file){const reader=new FileReader();reader.onload=e=>{const prev=document.getElementById('imgPreview');prev.src=e.target.result;prev.style.display='block';document.getElementById('uploadPlaceholder').style.display='none';const av=document.getElementById('previewAvatar');av.innerHTML=`<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`};reader.readAsDataURL(file)}
+</script>}
 }

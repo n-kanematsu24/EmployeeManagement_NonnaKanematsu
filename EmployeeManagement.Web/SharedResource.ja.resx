@@ -67,4 +67,15 @@
   <data name="Login.Id" xml:space="preserve"><value>ログインID</value></data>
   <data name="Login.Password" xml:space="preserve"><value>パスワード</value></data>
   <data name="Login.DemoHint" xml:space="preserve"><value>デモ用アカウント：ID admin ／ パスワード admin123</value></data>
+  <data name="Label.EnNameOptional" xml:space="preserve"><value>英語表示名（任意）</value></data>
+  <data name="Sort.Updated" xml:space="preserve"><value>更新順</value></data>
+  <data name="Sort.NoAsc" xml:space="preserve"><value>番号↑</value></data>
+  <data name="Sort.NoDesc" xml:space="preserve"><value>番号↓</value></data>
+  <data name="Count.Total" xml:space="preserve"><value>全</value></data>
+  <data name="Label.SystemInfo" xml:space="preserve"><value>システム情報</value></data>
+  <data name="Label.ReadOnly" xml:space="preserve"><value>変更不可</value></data>
+  <data name="Label.UpdatedBy" xml:space="preserve"><value>最終更新者</value></data>
+  <data name="Label.CreatedAt" xml:space="preserve"><value>登録日時</value></data>
+  <data name="Label.UpdatedAt" xml:space="preserve"><value>更新日時</value></data>
+  <data name="Label.SystemAdmin" xml:space="preserve"><value>システム管理者</value></data>
 </root>

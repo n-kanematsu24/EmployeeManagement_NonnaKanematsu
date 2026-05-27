@@ -5,8 +5,7 @@ namespace EmployeeManagement.Web.Controllers
 {
     public class CultureController : Controller
     {
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public IActionResult Set(string culture, string returnUrl = "/")
         {
             Response.Cookies.Append(

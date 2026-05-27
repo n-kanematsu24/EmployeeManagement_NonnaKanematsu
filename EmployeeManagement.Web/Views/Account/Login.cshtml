@@ -1,8 +1,70 @@
 @model LoginViewModel
 @{
     Layout = "_LoginLayout";
+    ViewBag.IsMobile = false;
+    ViewData["Title"] = L["Page.Login"];
+    var ua = Context.Request.Headers["User-Agent"].ToString().ToLower();
+    var isMobile = ua.Contains("mobile") || ua.Contains("android") || ua.Contains("iphone");
+    if (isMobile) { Layout = null; }
 }
 
+@if (isMobile)
+{
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>@L["Page.Login"]</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#2b5ba5;--danger:#ff3b30;--bg:#f5f5f7;--white:#fff;--border:#e5e5ea;--text-dark:#1c1c1e;--text-soft:#aeaeb2;--font:'Noto Sans JP',sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text-dark);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.m-login-wrap{width:100%;max-width:400px}
+.m-login-logo{text-align:center;margin-bottom:40px}
+.m-login-logo-title{font-size:24px;font-weight:700;margin-bottom:6px}
+.m-login-logo-sub{font-size:13px;color:var(--text-soft)}
+.m-login-card{background:var(--white);border-radius:20px;padding:28px 24px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:20px}
+.m-label{font-size:12px;font-weight:600;color:#636366;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block}
+.m-input{width:100%;padding:14px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;font-family:var(--font);font-size:16px;outline:none;margin-bottom:16px;-webkit-appearance:none;transition:border-color .2s}
+.m-input:focus{border-color:var(--accent);background:var(--white)}
+.m-submit{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
+.m-submit:active{background:#1e4a8a}
+.m-error{background:#fff5f5;border:1px solid #ffc9c9;border-radius:10px;padding:12px;font-size:13px;color:var(--danger);margin-bottom:16px}
+.m-demo{background:var(--white);border-radius:14px;padding:14px 16px;font-size:12px;color:#636366;text-align:center}
+</style>
+</head>
+<body>
+<div class="m-login-wrap">
+  <div class="m-login-logo">
+    <div class="m-login-logo-title">@L["System.Title"]</div>
+    <div class="m-login-logo-sub">@L["System.SubTitle"]</div>
+  </div>
+  <div class="m-login-card">
+    @if (!ViewData.ModelState.IsValid)
+    {
+      <div class="m-error">
+        @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        { <div>@err.ErrorMessage</div> }
+      </div>
+    }
+    <form asp-controller="Account" asp-action="Login" method="post">
+      @Html.AntiForgeryToken()
+      <label class="m-label">@L["Login.Id"]</label>
+      <input asp-for="LoginId" class="m-input" placeholder="admin" autocomplete="username">
+      <label class="m-label">@L["Login.Password"]</label>
+      <input asp-for="Password" type="password" class="m-input" placeholder="••••••••" autocomplete="current-password">
+      <button type="submit" class="m-submit">@L["Btn.Login"]</button>
+    </form>
+  </div>
+  <div class="m-demo">@L["Login.DemoHint"]</div>
+</div>
+</body>
+</html>
+}
+else
+{
 <style>
 .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:var(--bg)}
 .login-wrap{width:100%;max-width:480px;opacity:0;transform:translateY(20px);animation:fadeUp .5s ease forwards}
@@ -10,107 +72,62 @@
 .brand-title{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
 .brand-sub{font-size:14px;color:var(--text-soft);letter-spacing:.04em}
 .form-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px 40px;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:32px}
-.form-card.shake{animation:shake .5s ease}
 .field-group{margin-bottom:24px}
-.field-label-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.field-label{font-size:13px;font-weight:600;color:var(--text-dark);letter-spacing:.02em}
+.field-label{font-size:13px;font-weight:600;color:var(--text-dark);margin-bottom:8px;display:block}
 .input-wrap{position:relative;display:flex;align-items:center}
 .input-icon{position:absolute;left:14px;color:var(--text-soft);opacity:.6;pointer-events:none}
 .field-input{width:100%;padding:13px 44px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:14px;color:var(--text-dark);outline:none;transition:border-color .2s,box-shadow .2s}
-.field-input::placeholder{color:var(--text-soft)}
 .field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,91,165,.1);background:var(--white)}
-.field-input.is-invalid{border-color:var(--danger)}
-.toggle-pw{position:absolute;right:12px;background:none;border:none;cursor:pointer;color:var(--text-soft);padding:4px;display:flex;align-items:center;transition:color .2s;border-radius:4px}
-.toggle-pw:hover{color:var(--text-dark)}
+.toggle-pw{position:absolute;right:12px;background:none;border:none;cursor:pointer;color:var(--text-soft);padding:4px;display:flex;align-items:center;border-radius:4px}
 .error-summary{background:#fff5f5;border:1px solid #ffc9c9;border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;color:var(--danger);margin-bottom:16px}
-.btn-login{width:100%;padding:14px;background:var(--text-dark);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.04em;transition:background .2s,transform .15s;margin-top:28px}
-.btn-login:hover{background:#333;transform:translateY(-1px)}
-.btn-login:active{transform:translateY(0)}
+.btn-login{width:100%;padding:14px;background:var(--text-dark);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;margin-top:28px}
+.btn-login:hover{background:#333}
 .demo-hint{background:#eef3fb;border:1px solid #c8d8f0;border-radius:var(--radius-sm);padding:12px 16px;margin-top:16px;font-size:12px;color:var(--accent)}
 .footer{text-align:center;font-size:12px;color:var(--text-soft)}
+@@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 </style>
-
 <div class="page">
   <div class="login-wrap">
     <div class="brand">
-      <div class="brand-title">社員情報管理システム</div>
-      <div class="brand-sub">Employee Management System</div>
+      <div class="brand-title">@L["System.Title"]</div>
+      <div class="brand-sub">@L["System.SubTitle"]</div>
     </div>
-
-    <div class="form-card" id="formCard">
+    <div class="form-card">
       @if (!ViewData.ModelState.IsValid)
       {
         <div class="error-summary">
           @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-          {
-            <div>@err.ErrorMessage</div>
-          }
+          { <div>@err.ErrorMessage</div> }
         </div>
       }
-
-      <form asp-action="Login" method="post" onsubmit="handleSubmit()">
+      <form asp-action="Login" method="post">
         @Html.AntiForgeryToken()
-
-        <!-- ログインID -->
         <div class="field-group">
-          <div class="field-label-row">
-            <span class="field-label">ログインID</span>
-          </div>
+          <label class="field-label">@L["Login.Id"]</label>
           <div class="input-wrap">
-            <input asp-for="LoginId" id="loginId" class="field-input @(!ViewData.ModelState.IsValid ? "is-invalid" : "")"
-              placeholder="ログインIDを入力" autocomplete="username">
-            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-            </svg>
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input asp-for="LoginId" class="field-input" placeholder="admin" autocomplete="username">
           </div>
-          <span asp-validation-for="LoginId" style="font-size:12px;color:var(--danger);margin-top:4px;display:block"></span>
         </div>
-
-        <!-- パスワード -->
         <div class="field-group">
-          <div class="field-label-row">
-            <span class="field-label">パスワード</span>
-          </div>
+          <label class="field-label">@L["Login.Password"]</label>
           <div class="input-wrap">
-            <input asp-for="Password" id="loginPw" type="password" class="field-input @(!ViewData.ModelState.IsValid ? "is-invalid" : "")"
-              placeholder="パスワードを入力" autocomplete="current-password">
-            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <button type="button" class="toggle-pw" onclick="togglePw()" title="表示/非表示">
-              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-              </svg>
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input asp-for="Password" id="loginPw" type="password" class="field-input" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="toggle-pw" onclick="togglePw()">
+              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
-          <span asp-validation-for="Password" style="font-size:12px;color:var(--danger);margin-top:4px;display:block"></span>
         </div>
-
-        <button type="submit" class="btn-login">ログイン</button>
+        <button type="submit" class="btn-login">@L["Btn.Login"]</button>
       </form>
+      <div class="demo-hint">@L["Login.DemoHint"]</div>
     </div>
-
-    <div class="demo-hint">デモ用アカウント：ID <strong>admin</strong> ／ パスワード <strong>admin123</strong></div>
-    <div class="footer" style="margin-top:24px">&copy; 2026 Employee Management System</div>
+    <div class="footer">&copy; @L["Footer.Copyright"]</div>
   </div>
 </div>
-
-@section Scripts {
 <script>
-let pwVisible = false;
-function togglePw() {
-  pwVisible = !pwVisible;
-  const inp = document.getElementById('loginPw');
-  const icon = document.getElementById('eyeIcon');
-  inp.type = pwVisible ? 'text' : 'password';
-  icon.innerHTML = pwVisible
-    ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
-    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-}
-
-@if (!ViewData.ModelState.IsValid && ViewData.ModelState.Any(k => k.Value?.Errors.Count > 0))
-{
-  @:document.getElementById('formCard').style.animation = 'shake .5s ease';
-}
+let pwVisible=false;
+function togglePw(){pwVisible=!pwVisible;document.getElementById('loginPw').type=pwVisible?'text':'password'}
 </script>
 }

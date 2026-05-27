@@ -1,3 +1,8 @@
 @{
-    Layout = "_Layout";
+    var ua = Context.Request.Headers["User-Agent"].ToString().ToLower();
+    var isMobile = ua.Contains("mobile") || ua.Contains("android") ||
+                   ua.Contains("iphone") || ua.Contains("ipad") ||
+                   ua.Contains("ipod");
+    ViewBag.IsMobile = isMobile;
+    Layout = isMobile ? "_MobileLayout" : "_Layout";
 }
