@@ -1,170 +1,197 @@
 <mxfile host="65bd71144e">
-    <diagram id="dv1AShSEV7cvJYDlPhTs" name="ページ1">
-        <mxGraphModel dx="461" dy="335" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <diagram id="empList001" name="ページ1">
+        <mxGraphModel dx="1200" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="2" value="user" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                <mxCell id="actor1" value="user" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
                     <mxGeometry x="40" y="20" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="3" value="IndexView" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="240" y="20" width="135" height="60" as="geometry"/>
+                <mxCell id="lane_view" value="IndexView" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="20" width="135" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="employeeController" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="530" y="20" width="135" height="60" as="geometry"/>
+                <mxCell id="lane_ctrl" value="EmployeeController" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1">
+                    <mxGeometry x="460" y="20" width="135" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="employeeService" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="820" y="20" width="135" height="60" as="geometry"/>
+                <mxCell id="lane_svc" value="IEmployeeService&#10;(将来)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="720" y="20" width="135" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" value="employeeRepository" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1110" y="20" width="135" height="60" as="geometry"/>
+                <mxCell id="lane_repo" value="IEmployeeRepository" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;" vertex="1" parent="1">
+                    <mxGeometry x="980" y="20" width="135" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="DB" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1400" y="20" width="135" height="60" as="geometry"/>
+                <mxCell id="lane_ctx" value="AppDbContext / EF Core" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+                    <mxGeometry x="1240" y="20" width="135" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="8" value="" style="endArrow=none;html=1;" parent="1" edge="1">
+                <mxCell id="lane_db" value="DB&#10;(PostgreSQL)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;" vertex="1" parent="1">
+                    <mxGeometry x="1500" y="20" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="ll1" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="55" y="100" as="sourcePoint"/>
-                        <mxPoint x="55" y="766" as="targetPoint"/>
+                        <mxPoint x="55" y="80" as="sourcePoint"/>
+                        <mxPoint x="55" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="9" value="" style="endArrow=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1" target="42">
+                <mxCell id="ll2" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="307.21" y="80" as="sourcePoint"/>
-                        <mxPoint x="307.21" y="1080" as="targetPoint"/>
+                        <mxPoint x="267" y="80" as="sourcePoint"/>
+                        <mxPoint x="267" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="11" value="" style="endArrow=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1" target="55">
+                <mxCell id="ll3" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="887.21" y="80" as="sourcePoint"/>
-                        <mxPoint x="887.21" y="1080" as="targetPoint"/>
+                        <mxPoint x="527" y="80" as="sourcePoint"/>
+                        <mxPoint x="527" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="12" value="" style="endArrow=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1" target="54">
+                <mxCell id="ll4" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="1177.21" y="80" as="sourcePoint"/>
-                        <mxPoint x="1177.21" y="1080" as="targetPoint"/>
+                        <mxPoint x="787" y="80" as="sourcePoint"/>
+                        <mxPoint x="787" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="13" value="" style="endArrow=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" edge="1" target="53">
+                <mxCell id="ll5" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="1467.21" y="80" as="sourcePoint"/>
-                        <mxPoint x="1467.21" y="1080" as="targetPoint"/>
+                        <mxPoint x="1047" y="80" as="sourcePoint"/>
+                        <mxPoint x="1047" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="14" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                <mxCell id="ll6" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="55" y="160" as="sourcePoint"/>
-                        <mxPoint x="307" y="160" as="targetPoint"/>
+                        <mxPoint x="1307" y="80" as="sourcePoint"/>
+                        <mxPoint x="1307" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="15" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                <mxCell id="ll7" value="" style="endArrow=none;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="307" y="220" as="sourcePoint"/>
-                        <mxPoint x="597" y="220" as="targetPoint"/>
+                        <mxPoint x="1567" y="80" as="sourcePoint"/>
+                        <mxPoint x="1567" y="780" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="16" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                <mxCell id="m1" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="597" y="280" as="sourcePoint"/>
-                        <mxPoint x="887" y="280" as="targetPoint"/>
+                        <mxPoint x="55" y="140" as="sourcePoint"/>
+                        <mxPoint x="267" y="140" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="17" value="1. access / employees" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="105" y="130" width="140" height="30" as="geometry"/>
+                <mxCell id="m1l" value="1. GET /Employee/Index" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="110" width="180" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="2. [HttpGet] index()" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="395" y="190" width="120" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="19" value="3. GetAll()" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="705" y="250" width="80" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="22" value="" style="endArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                <mxCell id="m2" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="887" y="580" as="sourcePoint"/>
-                        <mxPoint x="597" y="580" as="targetPoint"/>
+                        <mxPoint x="267" y="200" as="sourcePoint"/>
+                        <mxPoint x="527" y="200" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="23" value="" style="endArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                <mxCell id="m2l" value="2. Index() アクション呼び出し" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="170" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="m3" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="597" y="640" as="sourcePoint"/>
-                        <mxPoint x="307" y="640" as="targetPoint"/>
+                        <mxPoint x="527" y="260" as="sourcePoint"/>
+                        <mxPoint x="787" y="260" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="24" value="3.2. return List ~Employee~" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="660" y="550" width="170" height="30" as="geometry"/>
+                <mxCell id="m3l" value="3. ログイン状態チェック (Session)" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="230" width="240" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="25" value="4. return IndexView(employeeList)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="350" y="610" width="210" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="26" value="" style="endArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                <mxCell id="m4" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="307" y="700" as="sourcePoint"/>
-                        <mxPoint x="55" y="700" as="targetPoint"/>
+                        <mxPoint x="527" y="320" as="sourcePoint"/>
+                        <mxPoint x="787" y="320" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="27" value="5. show employee list" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="105" y="670" width="140" height="30" as="geometry"/>
+                <mxCell id="m4l" value="4. GetAllAsync() ※将来Service層経由" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontStyle=2;fontColor=#808080;" vertex="1" parent="1">
+                    <mxGeometry x="540" y="290" width="280" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="36" value="" style="endArrow=classic;html=1;dashed=1;" parent="1" edge="1">
+                <mxCell id="m5" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="1468" y="460" as="sourcePoint"/>
-                        <mxPoint x="1177" y="460" as="targetPoint"/>
+                        <mxPoint x="787" y="380" as="sourcePoint"/>
+                        <mxPoint x="1047" y="380" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="41" value="user" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
-                    <mxGeometry x="40" y="760" width="30" height="60" as="geometry"/>
+                <mxCell id="m5l" value="5. GetAllWithDepartmentAsync()" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="810" y="350" width="240" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="RegisterView" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="240" y="760" width="135" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="46" value="" style="endArrow=none;html=1;" parent="1" target="45" edge="1">
+                <mxCell id="m6" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="597" y="80" as="sourcePoint"/>
-                        <mxPoint x="597" y="1080" as="targetPoint"/>
+                        <mxPoint x="1047" y="440" as="sourcePoint"/>
+                        <mxPoint x="1307" y="440" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="45" value="employeeController" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="530" y="760" width="135" height="60" as="geometry"/>
+                <mxCell id="m6l" value="6. Employees.Where(!IsDeleted).Include(Department)" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="1060" y="410" width="280" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="52" value="3.1.2. return records" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="1260" y="430" width="130" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="53" value="DB" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1400" y="760" width="135" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="54" value="employeeRepository" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1110" y="760" width="135" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="55" value="employeeService" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="820" y="760" width="135" height="60" as="geometry"/>
-                </mxCell>
-                <mxCell id="57" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                <mxCell id="m7" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="888" y="340" as="sourcePoint"/>
-                        <mxPoint x="1179" y="340" as="targetPoint"/>
+                        <mxPoint x="1307" y="500" as="sourcePoint"/>
+                        <mxPoint x="1567" y="500" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="58" value="3.1. FindAll()" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="985" y="310" width="90" height="30" as="geometry"/>
+                <mxCell id="m7l" value="7. SELECT (社員＋部門 JOIN)" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1330" y="470" width="240" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="59" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                <mxCell id="m8" value="" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="1177" y="400" as="sourcePoint"/>
-                        <mxPoint x="1467" y="400" as="targetPoint"/>
+                        <mxPoint x="1567" y="560" as="sourcePoint"/>
+                        <mxPoint x="787" y="560" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="60" value="3.1.1. SELECT * FROM employee" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="1220" y="370" width="210" height="30" as="geometry"/>
+                <mxCell id="m8l" value="8. return List&lt;Employee&gt; (部門込み)" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1080" y="530" width="280" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="61" value="" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1">
+                <mxCell id="m9" value="" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="1178" y="520" as="sourcePoint"/>
-                        <mxPoint x="888" y="520" as="targetPoint"/>
+                        <mxPoint x="787" y="620" as="sourcePoint"/>
+                        <mxPoint x="527" y="620" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="62" value="3.1.3. return List ~Employee~" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-                    <mxGeometry x="940" y="490" width="180" height="30" as="geometry"/>
+                <mxCell id="m9l" value="9. return" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="590" width="170" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="m10" value="" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="527" y="680" as="sourcePoint"/>
+                        <mxPoint x="267" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m10l" value="10. return View(employees.Select(ToViewModel))" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="650" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="m11" value="" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="267" y="740" as="sourcePoint"/>
+                        <mxPoint x="55" y="740" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="m11l" value="11. 社員一覧画面を表示" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="710" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor2" value="user" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="780" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_view2" value="IndexView" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="780" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_ctrl2" value="EmployeeController" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1">
+                    <mxGeometry x="460" y="780" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_svc2" value="IEmployeeService&#10;(将来)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="720" y="780" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_repo2" value="IEmployeeRepository" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;" vertex="1" parent="1">
+                    <mxGeometry x="980" y="780" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_ctx2" value="AppDbContext / EF Core" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+                    <mxGeometry x="1240" y="780" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane_db2" value="DB&#10;(PostgreSQL)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;" vertex="1" parent="1">
+                    <mxGeometry x="1500" y="780" width="135" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="社員一覧表示 シーケンス図" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="870" width="400" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="note" value="【注記】&#10;・GetAllWithDepartmentAsync() は EF Core の Include() で部門情報も同時取得（N+1問題対策）&#10;・取得した Employee を ToViewModel() で EmployeeViewModel に変換してから View に渡す&#10;・赤の点線枠 : Service層は将来追加予定" style="text;html=1;align=left;verticalAlign=top;fontSize=11;strokeColor=#999999;fillColor=#FAFAFA;spacingLeft=10;spacingTop=8;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="910" width="900" height="90" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
